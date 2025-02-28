@@ -1,19 +1,20 @@
 //import { skapa_recept_url, Recipe } from "./recept_url";
-import { skapa_recpt_url } from "./test2,js";
-const skapa_recept_url = require('./test2')
+//import { skapa_recpt_url, Recipe } from "./test2.js";
+const skapa_recept_url = require('./test2.js')
 
-// export class Recipe {
-//     title: string;
-//     port: number; //antal portioner
-//     ingred: Array<string>
-//     amounts: Array<string>
-//     constructor(title: string, port: number, ingred: Array<string>, amounts: Array<string> = []) {
-//         this.title = title;
-//         this.port = port
-//         this.ingred = ingred;
-//         this.amounts = amounts;
-//     }
-// }
+
+export class Recipe {
+    title: string;
+    port: number; //antal portioner
+    ingred: Array<string>
+    amounts: Array<string>
+    constructor(title: string, port: number, ingred: Array<string>, amounts: Array<string> = []) {
+        this.title = title;
+        this.port = port
+        this.ingred = ingred;
+        this.amounts = amounts;
+    }
+}
 
 //const r1 = new Recipe("köttbulle",3, ["kött", "bulle"]);
 const r1 = new Recipe("Köttbullar", 2, ["färs", "mjölk", "ströbröd", "gul lök", "ägg", "salt", "peppar"]);
