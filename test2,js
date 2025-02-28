@@ -13,7 +13,7 @@ class Recipe {
 
 const url = 'https://undertian.com/recept/graartsbolognese/';
 
-export async function skapa_recpt_url(url) {
+export async function skapa_recept_url(url) {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
@@ -53,23 +53,59 @@ export async function skapa_recpt_url(url) {
     
     await browser.close();
     const r = new Recipe(title, 2, ingredients, amounts );
-    console.log(r)
 
     return  r; 
 }
 
 
 // Kör funktionen
-skapa_recpt_url('https://undertian.com/recept/kramig-belugapastasas-med-paprika/');
+skapa_recept_url('https://undertian.com/recept/kramig-belugapastasas-med-paprika/');
 
 
 
 //recept från url
-const r3 = skapa_recept_url("https://undertian.com/recept/graartsbolognese/");
-const r4 = skapa_recept_url("https://undertian.com/recept/pad-thai-cheap-style/");
-const r5 = skapa_recept_url("https://undertian.com/recept/tomatsoppa-med-ort-tomat-och-fetabrod-2/");
-const r6 = skapa_recept_url("https://undertian.com/recept/gazpacho-med-bonbrod/");
-const r7 = skapa_recept_url("https://undertian.com/recept/snabb-pasta-med-soltorkade-tomater-tahini-och-vita-bonor/");
-const r8 = skapa_recept_url("https://undertian.com/recept/kramig-kalsas/");
+// const r3 = skapa_recept_url("https://undertian.com/recept/graartsbolognese/");
+// const r4 = skapa_recept_url("https://undertian.com/recept/pad-thai-cheap-style/");
+// const r5 = skapa_recept_url("https://undertian.com/recept/tomatsoppa-med-ort-tomat-och-fetabrod-2/");
+// const r6 = skapa_recept_url("https://undertian.com/recept/gazpacho-med-bonbrod/");
+// const r7 = skapa_recept_url("https://undertian.com/recept/snabb-pasta-med-soltorkade-tomater-tahini-och-vita-bonor/");
+// const r8 = skapa_recept_url("https://undertian.com/recept/kramig-kalsas/");
 
-console.log(r7.amounts[0], r7.ingred[0]);
+//console.log(r7);
+
+
+import fs from 'fs';
+import { randomInt } from 'crypto';
+
+
+
+async function saveRecipeToFile(url) {
+    const recipe = await skapa_recept_url(url);
+
+    if (!recipe) {
+        console.error('Misslyckades att hämta receptet.');
+        return;
+    }
+
+    // Skapa en Recipe-instans i korrekt format
+    const recipeContent = `
+
+const r${randomInt(1,1000)} = new Recipe(
+    ${JSON.stringify(recipe.title)},
+    2, 
+    ${JSON.stringify(recipe.ingred)},
+    ${JSON.stringify(recipe.amounts)}
+);
+
+`;
+
+    // Lägg till receptet i filen utan att skriva över tidigare data
+    fs.appendFileSync('recipe.ts', recipeContent, 'utf8');
+    console.log('Receptet har lagts till i recipe.ts!');
+}
+
+
+
+// Exempel på anrop
+//const url = 'https://undertian.com/recept/graartsbolognese/';
+saveRecipeToFile("https://undertian.com/recept/tomatsoppa-med-ort-tomat-och-fetabrod-2/");
