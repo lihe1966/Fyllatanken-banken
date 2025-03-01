@@ -2,14 +2,14 @@
 
 class Recipe {
     title: string;
-    port: number; //antal portioner
+    port: number; 
     ingred: Array<string>
     amounts: Array<string>
     constructor(title: string, port: number, ingred: Array<string>, amounts: Array<string> = []) {
-        this.title = title;
-        this.port = port;
-        this.ingred = ingred;
-        this.amounts = amounts;
+        this.title = title;  //Maträtt
+        this.port = port;   //Antal portioner
+        this.ingred = ingred; //Ingredienser
+        this.amounts = amounts; //Mått för ingredienserna
     }
 }
 
@@ -19,5 +19,4 @@ const r3 = new Recipe("Pelmeni", 4,["vetemjöl", "ägg", "salt", "färs", "gul l
 const r4 = new Recipe("Omelett", 4, ["ägg", "mjölk", "salt", "peppar", "smör eller margarin"],["6", "1 dl", "1/2 tsk", "1 krm", "2 msk"]);
 const r5 = new Recipe("Lasagne", 4, ["gul lök", "vitlöksklyftor", "nötfärs", "olja", "tomatpuré", "torkad timjan", "torkad rosmarin", "krossade tomater", "köttbuljongtärning", "salt", "peppar", "torkade lasagneplattor","smör", "vetemjöl", "mjölk"],["2", "2", "500 g", "1 msk", "4 msk","1 tsk", "1 tsk", "390 g", "1", "1 krm", "1 krm", "9", "6 msk", "6 msk", "10 dl"]);
 
-console.log(r4.port); 
-
+console.log(r4.port);
