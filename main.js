@@ -40,16 +40,24 @@ var jsdom_1 = require("jsdom");
 var readline = require("readline");
 var document = new jsdom_1.JSDOM("<!DOCTYPE html><p>Hello</p>").window.document;
 var Recipe = /** @class */ (function () {
-    function Recipe(title, ingred, amounts, time) {
+    function Recipe(title, port, ingred, amounts) {
+        if (amounts === void 0) { amounts = []; }
         this.title = title;
+        this.port = port;
         this.ingred = ingred;
         this.amounts = amounts;
-        this.time = time;
     }
     return Recipe;
 }());
-//const prompt = PromptSync();
-var r1 = new Recipe('Pancakes', ['Flour', 'Eggs', 'Milk'], ["2DL", "3", "5DL"], 15);
+//VARIABLES
+var r1 = new Recipe("Köttbullar", 2, ["färs", "mjölk", "ströbröd", "gul lök", "ägg", "salt", "peppar"], ["500g", "1,5 dl", "5 msk", "1/2", "1", "1 tsk", "1 krm"]);
+var r2 = new Recipe("Havregrynsgröt", 3, ["havregryn", "vatten", "salt"], ["1 dl", "2,5 dl", "0,5 krm"]);
+var r3 = new Recipe("Pelmeni", 4, ["vetemjöl", "ägg", "salt", "färs", "gul lök", "salt", "peppar"], ["300g", "3", "1/2 tsk", "300g", "1", "1 krm", "1 krm"]);
+var r4 = new Recipe("Omelett", 4, ["ägg", "mjölk", "salt", "peppar", "smör eller margarin"], ["6", "1 dl", "1/2 tsk", "1 krm", "2 msk"]);
+var r5 = new Recipe("Lasagne", 4, ["gul lök", "vitlöksklyftor", "nötfärs", "olja", "tomatpuré", "torkad timjan", "torkad rosmarin", "krossade tomater", "köttbuljongtärning", "salt", "peppar", "torkade lasagneplattor", "smör", "vetemjöl", "mjölk"], ["2", "2", "500 g", "1 msk", "4 msk", "1 tsk", "1 tsk", "390 g", "1", "1 krm", "1 krm", "9", "6 msk", "6 msk", "10 dl"]);
+var r6 = new Recipe("Havresoppa", 2, ["havregryn", "vatten", "salt", "brosk"], ["1 dl", "2,5 dl", "0,5 krm", "3 kg"]);
+var allRecipes = [r1, r2, r3, r4, r5, r6];
+var ammountOfRecipes = 6;
 var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -96,21 +104,57 @@ function add_ingredient() {
                     console.log("Dina ingredienser är:", ingredients.join(", "));
                     rl.close();
                     if (userInput != null) {
-                        searchFunction(ingredients);
+                        searchFunction(ingredients, allRecipes);
                     }
                     return [2 /*return*/];
             }
         });
     });
 }
-function searchFunction(ings) {
-    console.log("ping");
+function searchFunction(ings, allRecipes) {
+    var result = []; //titel, mängd korrekta ingredienser, totalt ingredienser i receptet 
+    var _loop_1 = function (i) {
+        var countSame = ings.filter(function (val) { return allRecipes[i].ingred.includes(val); }).length;
+        if (countSame >= allRecipes[i].ingred.length - 3) { //Saknas fler än 3 ingredienser behöver receptet inte vara med
+            var tempArray = [allRecipes[i].title, countSame, allRecipes[i].ingred.length];
+            result.push(tempArray);
+        }
+    };
+    for (var i = 0; i < ammountOfRecipes; i = i + 1) {
+        _loop_1(i);
+    }
+    result = result.sort(function (a, b) { return b[1] - a[1]; }); //Sortera
+    var formattedResult = result.map(function (_a) {
+        var title = _a[0], count = _a[1], deniminator = _a[2];
+        return [title, "".concat(count, "/").concat(deniminator)];
+    });
+    console.log(formattedResult);
 }
 function main() {
-    console.clear();
-    console.log("Välkommen till fylla tanken-banken!");
-    console.log("Alterantiv\n 1. Sök recept.");
-    add_ingredient();
-    //console.log(r1);
+    return __awaiter(this, void 0, void 0, function () {
+        var userInput;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.clear();
+                    console.log("Välkommen till fylla tanken-banken!");
+                    console.log("Alterantiv\n 1. Sök recept.\n");
+                    _a.label = 1;
+                case 1:
+                    if (!true) return [3 /*break*/, 3];
+                    return [4 /*yield*/, askQuestion(":")];
+                case 2:
+                    userInput = _a.sent();
+                    if (userInput === "1") {
+                        return [3 /*break*/, 3];
+                    }
+                    console.log("Felaktig input\n");
+                    return [3 /*break*/, 1];
+                case 3:
+                    add_ingredient();
+                    return [2 /*return*/];
+            }
+        });
+    });
 }
 main();
