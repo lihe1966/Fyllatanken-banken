@@ -90,7 +90,6 @@ const r${randomInt(1, 1000)} = new Recipe(
     ${JSON.stringify(recipe.ingred)},
     ${JSON.stringify(recipe.amounts)}
 );
-
 `;
  // Lägg till receptet i filen utan att skriva över tidigare data
     fs.appendFileSync('recipe.ts', recipeContent, 'utf8');
@@ -100,7 +99,8 @@ const r${randomInt(1, 1000)} = new Recipe(
 
 
 // Exempelanrop
-const url = "https://www.ica.se/recept/vafflor-grundrecept-292887/"
-skapa_recept_url(url)
+//const url = "https://www.ica.se/recept/vafflor-grundrecept-292887/"
+//skapa_recept_url(url)
 
-//save_recipe("https://www.ica.se/recept/vafflor-grundrecept-292887/");
+
+save_recipe('')
