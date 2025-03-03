@@ -1,19 +1,22 @@
-//const puppeteer = require('puppeteer');
 import puppeteer from 'puppeteer';
+import * as fs from 'fs';
+import { randomInt } from 'crypto';
 
 class Recipe {
-    constructor(title, port = null, ingred, amounts = []) {
+    title: string;
+    port: number | null;
+    ingred:Array<string>;
+    amounts: Array<string>;
+
+    constructor(title: string, port: number | null = null, ingred: string[], amounts: string[] = []) {
         this.title = title;
-        this.port = port; // Antal portioner
+        this.port = port;
         this.ingred = ingred;
         this.amounts = amounts;
     }
 }
 
-
-const url = 'https://undertian.com/recept/graartsbolognese/';
-
-export async function skapa_recept_url(url) {
+export async function skapa_recept_url(url: string): Promise<Recipe | null> {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
@@ -23,63 +26,40 @@ export async function skapa_recept_url(url) {
         const h1 = document.querySelector('h1');
         return h1 ? h1.innerText.trim() : null;
     });
-    
+
     console.log('Titel:', title);
-    
+
+    if (!title) {
+        await browser.close();
+        return null;
+    }
 
     // Vänta på att ingredienslistan laddas in
     await page.waitForSelector('.ingredients .ingredients-group ul');
 
     // Extrahera ingredienserna
-    const ingredients = await page.evaluate(() => {
+    const ingredients: string[] = await page.evaluate(() => {
         return Array.from(document.querySelectorAll('.ingredients .ingredients-group ul li span:nth-child(3)'))
-            .map(li => li.innerText.trim())
-            
+            .map(li => li.textContent?.trim() || '');
     });
 
-    const amounts = await page.evaluate(() => {
+    const amounts: string[] = await page.evaluate(() => {
         return Array.from(document.querySelectorAll('.ingredients .ingredients-group ul li'))
             .map(li => {
                 const spans = li.querySelectorAll('span');
                 return Array.from(spans)
                     .slice(0, 2) // Tar bara de två första mått och enhet
-                    .map(span => span.innerText.trim())
+                    .map(span => span.textContent?.trim() || '')
                     .join(' '); // Slår ihop texten till en sträng
             })
             .filter(text => text.length > 0); // Tar bort eventuella tomma strängar
     });
-    
 
-    
     await browser.close();
-    const r = new Recipe(title, 2, ingredients, amounts );
-
-    return  r; 
+    return new Recipe(title, 2, ingredients, amounts);
 }
 
-
-// Kör funktionen
-skapa_recept_url('https://undertian.com/recept/kramig-belugapastasas-med-paprika/');
-
-
-
-//recept från url
-// const r3 = skapa_recept_url("https://undertian.com/recept/graartsbolognese/");
-// const r4 = skapa_recept_url("https://undertian.com/recept/pad-thai-cheap-style/");
-// const r5 = skapa_recept_url("https://undertian.com/recept/tomatsoppa-med-ort-tomat-och-fetabrod-2/");
-// const r6 = skapa_recept_url("https://undertian.com/recept/gazpacho-med-bonbrod/");
-// const r7 = skapa_recept_url("https://undertian.com/recept/snabb-pasta-med-soltorkade-tomater-tahini-och-vita-bonor/");
-// const r8 = skapa_recept_url("https://undertian.com/recept/kramig-kalsas/");
-
-//console.log(r7);
-
-
-import fs from 'fs';
-import { randomInt } from 'crypto';
-
-
-
-async function saveRecipeToFile(url) {
+async function save_recipe(url: string): Promise<void> {
     const recipe = await skapa_recept_url(url);
 
     if (!recipe) {
@@ -90,7 +70,7 @@ async function saveRecipeToFile(url) {
     // Skapa en Recipe-instans i korrekt format
     const recipeContent = `
 
-const r${randomInt(1,1000)} = new Recipe(
+const r${randomInt(1, 1000)} = new Recipe(
     ${JSON.stringify(recipe.title)},
     2, 
     ${JSON.stringify(recipe.ingred)},
@@ -104,8 +84,5 @@ const r${randomInt(1,1000)} = new Recipe(
     console.log('Receptet har lagts till i recipe.ts!');
 }
 
-
-
 // Exempel på anrop
-//const url = 'https://undertian.com/recept/graartsbolognese/';
-saveRecipeToFile("https://undertian.com/recept/tomatsoppa-med-ort-tomat-och-fetabrod-2/");
+save_recipe("https://undertian.com/recept/broccolipasta/");

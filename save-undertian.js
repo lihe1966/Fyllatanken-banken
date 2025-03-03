@@ -1,8 +1,5 @@
 //const puppeteer = require('puppeteer');
 import puppeteer from 'puppeteer';
-import fs from 'fs';
-import { randomInt } from 'crypto';
-
 
 class Recipe {
     constructor(title, port = null, ingred, amounts = []) {
@@ -31,48 +28,28 @@ export async function skapa_recept_url(url) {
     
 
     // Vänta på att ingredienslistan laddas in
-    await page.waitForSelector('#ingredients');
+    await page.waitForSelector('.ingredients .ingredients-group ul');
 
     // Extrahera ingredienserna
-    const amounts = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll('#ingredients .ingredients-list-group__card'))
-        .map(ing => {
-            // Hämta bara innehållet i <span class="ingredients-list-group__card__qty">
-            const qty = ing.querySelector('.ingredients-list-group__card__qty');
-
-            // Om qty-elementet inte finns, returnera en tom sträng
-            if (!qty) {
-                return "";
-            }
-
-            // Annars, returnera innehållet av qty (ex. "100 g")
-            return qty.innerText.trim();
-        });
+    const ingredients = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll('.ingredients .ingredients-group ul li span:nth-child(3)'))
+            .map(li => li.innerText.trim())
             
     });
-    console.log(amounts);
+
+    const amounts = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll('.ingredients .ingredients-group ul li'))
+            .map(li => {
+                const spans = li.querySelectorAll('span');
+                return Array.from(spans)
+                    .slice(0, 2) // Tar bara de två första mått och enhet
+                    .map(span => span.innerText.trim())
+                    .join(' '); // Slår ihop texten till en sträng
+            })
+            .filter(text => text.length > 0); // Tar bort eventuella tomma strängar
+    });
     
-    const ingredients = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll('#ingredients .ingredients-list-group__card'))
-        .map(ing => {
-            // Hämta texten som kommer efter <span class="ingredients-list-group__card__qty">
-            const qty = ing.querySelector('.ingredients-list-group__card__qty');
-            
-            // Ta bort kvantiteten (om den finns) och extrahera resten av texten
-            let ingredientText = ing.innerText.trim();
 
-            // Om qty finns, ta bort det från ingredientText
-            if (qty) {
-                ingredientText = ingredientText.replace(qty.innerText, '').trim();  // Ta bort kvantiteten och trimma bort överflödiga mellanslag
-            }
-
-            // Returnera den extraherade ingrediensen (t.ex. "smör")
-            return ingredientText || "";  // Om ingen text finns, returnera en tom sträng
-        });
-        
-});
-            
-console.log(ingredients);
     
     await browser.close();
     const r = new Recipe(title, 2, ingredients, amounts );
@@ -97,6 +74,8 @@ console.log(ingredients);
 //console.log(r7);
 
 
+import fs from 'fs';
+import { randomInt } from 'crypto';
 
 
 
@@ -131,4 +110,9 @@ const r${randomInt(1,1000)} = new Recipe(
 //const url = 'https://undertian.com/recept/graartsbolognese/';
 const url = 'https://undertian.com/recept/graartsbolognese/';
 //save_recipe("https://undertian.com/recept/tomatsoppa-med-ort-tomat-och-fetabrod-2/");
-save_recipe("https://www.ica.se/recept/capricciosa-730268/");
+save_recipe("https://undertian.com/recept/vegansk-bolognese-pa-sojafars/");
+save_recipe("https://undertian.com/recept/gronkalssallad-med-belugalinser-och-kardemummadressing/");
+save_recipe("https://undertian.com/recept/veganska-kottbullar-med-pasta-och-tomatsas/");
+save_recipe("https://undertian.com/recept/billig-rotfruktssoppa/");
+save_recipe("https://undertian.com/recept/tomatsoppa-med-ugnsrostade-blomkal/");
+save_recipe("https://undertian.com/recept/lins-och-pumpabollar-med-ajvar-relish/");
