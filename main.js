@@ -36,9 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var jsdom_1 = require("jsdom");
 var readline = require("readline");
-var document = new jsdom_1.JSDOM("<!DOCTYPE html><p>Hello</p>").window.document;
 var Recipe = /** @class */ (function () {
     function Recipe(title, port, ingred, amounts) {
         if (amounts === void 0) { amounts = []; }
@@ -57,15 +55,9 @@ var r4 = new Recipe("Omelett", 4, ["ägg", "mjölk", "salt", "peppar", "smör el
 var r5 = new Recipe("Lasagne", 4, ["gul lök", "vitlöksklyftor", "nötfärs", "olja", "tomatpuré", "torkad timjan", "torkad rosmarin", "krossade tomater", "köttbuljongtärning", "salt", "peppar", "torkade lasagneplattor", "smör", "vetemjöl", "mjölk"], ["2", "2", "500 g", "1 msk", "4 msk", "1 tsk", "1 tsk", "390 g", "1", "1 krm", "1 krm", "9", "6 msk", "6 msk", "10 dl"]);
 var r6 = new Recipe("Havresoppa", 2, ["havregryn", "vatten", "salt", "brosk"], ["1 dl", "2,5 dl", "0,5 krm", "3 kg"]);
 var allRecipes = [r1, r2, r3, r4, r5, r6];
-var ammountOfRecipes = 6;
 var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
-});
-document.addEventListener('keydown', function (event) {
-    if (event.key === '') {
-        console.log('Escape key was pressed!');
-    }
 });
 function askQuestion(query) {
     return __awaiter(this, void 0, void 0, function () {
@@ -102,33 +94,120 @@ function add_ingredient() {
                     return [3 /*break*/, 1];
                 case 3:
                     console.log("Dina ingredienser är:", ingredients.join(", "));
-                    rl.close();
                     if (userInput != null) {
-                        searchFunction(ingredients, allRecipes);
+                        searchByIngred(ingredients, allRecipes);
                     }
                     return [2 /*return*/];
             }
         });
     });
 }
-function searchFunction(ings, allRecipes) {
-    var result = []; //titel, mängd korrekta ingredienser, totalt ingredienser i receptet 
-    var _loop_1 = function (i) {
-        var countSame = ings.filter(function (val) { return allRecipes[i].ingred.includes(val); }).length;
-        if (countSame >= allRecipes[i].ingred.length - 3) { //Saknas fler än 3 ingredienser behöver receptet inte vara med
-            var tempArray = [allRecipes[i].title, countSame, allRecipes[i].ingred.length];
-            result.push(tempArray);
-        }
-    };
-    for (var i = 0; i < ammountOfRecipes; i = i + 1) {
-        _loop_1(i);
-    }
-    result = result.sort(function (a, b) { return b[1] - a[1]; }); //Sortera
-    var formattedResult = result.map(function (_a) {
-        var title = _a[0], count = _a[1], deniminator = _a[2];
-        return [title, "".concat(count, "/").concat(deniminator)];
+function searchByIngred(ings, allRecipes) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result, _loop_1, i, formattedResult, userInput;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    result = [];
+                    _loop_1 = function (i) {
+                        var countSame = ings.filter(function (val) { return allRecipes[i].ingred.includes(val); }).length;
+                        if (countSame >= allRecipes[i].ingred.length - 3) { //Saknas fler än 3 ingredienser behöver receptet inte vara med
+                            var tempArray = [allRecipes[i].title, countSame, allRecipes[i].ingred.length];
+                            result.push(tempArray);
+                        }
+                    };
+                    for (i = 1; i < allRecipes.length; i = i + 1) {
+                        _loop_1(i);
+                    }
+                    result = result.sort(function (a, b) { return b[1] - a[1]; }); //Sortera
+                    formattedResult = result.map(function (_a) {
+                        var title = _a[0], count = _a[1], deniminator = _a[2];
+                        return [title, "".concat(count, "/").concat(deniminator)];
+                    });
+                    console.log(formattedResult);
+                    console.log("\n\n");
+                    _a.label = 1;
+                case 1:
+                    if (!true) return [3 /*break*/, 3];
+                    return [4 /*yield*/, askQuestion("Vill du söka upp något specifikt recept? ")];
+                case 2:
+                    userInput = _a.sent();
+                    if (userInput === "ja" || userInput === "Ja") {
+                        searchByName();
+                        return [3 /*break*/, 3];
+                    }
+                    if (userInput === "nej" || userInput === "Nej") {
+                        main();
+                        return [3 /*break*/, 3];
+                    }
+                    else {
+                        console.log("Felaktig input");
+                    }
+                    return [3 /*break*/, 1];
+                case 3: return [2 /*return*/];
+            }
+        });
     });
-    console.log(formattedResult);
+}
+function searchByName() {
+    return __awaiter(this, void 0, void 0, function () {
+        var found, userInput, i;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    found = false;
+                    return [4 /*yield*/, askQuestion("Skriv in en rätt, om du vill gå ur skriv 'klar': ")];
+                case 1:
+                    userInput = _a.sent();
+                    if (userInput === "klar") {
+                        found = true;
+                        main();
+                    }
+                    for (i = 1; i < allRecipes.length; i = i + 1) {
+                        if (userInput.toLowerCase() === allRecipes[i].title.toLowerCase()) {
+                            printRecipe(allRecipes[i]);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        console.log("Receptet finns inte, testa igen");
+                        searchByName();
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function printRecipe(recipe) {
+    return __awaiter(this, void 0, void 0, function () {
+        var userInput;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.clear();
+                    console.log("Namn: " + recipe.title);
+                    console.log("Antal portioner: " + recipe.port);
+                    console.log("Ingredienser: " + recipe.ingred);
+                    console.log("Mängder per ingrediens: " + recipe.amounts + "\n");
+                    _a.label = 1;
+                case 1:
+                    if (!true) return [3 /*break*/, 3];
+                    return [4 /*yield*/, askQuestion("Skriv 'klar' för att fortsätta: ")];
+                case 2:
+                    userInput = _a.sent();
+                    if (userInput === "klar" || userInput === "Klar") {
+                        main();
+                        return [3 /*break*/, 3];
+                    }
+                    else {
+                        console.log("Felaktig input");
+                    }
+                    return [3 /*break*/, 1];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
 }
 function main() {
     return __awaiter(this, void 0, void 0, function () {
@@ -138,7 +217,7 @@ function main() {
                 case 0:
                     console.clear();
                     console.log("Välkommen till fylla tanken-banken!");
-                    console.log("Alterantiv\n 1. Sök recept.\n");
+                    console.log("Alterantiv\n 1. Sök recept efter ingredienser.\n 2. Sök recept.\n");
                     _a.label = 1;
                 case 1:
                     if (!true) return [3 /*break*/, 3];
@@ -146,13 +225,16 @@ function main() {
                 case 2:
                     userInput = _a.sent();
                     if (userInput === "1") {
+                        add_ingredient();
+                        return [3 /*break*/, 3];
+                    }
+                    if (userInput === "2") {
+                        searchByName(); //Söker utan inmatade ingredienser.
                         return [3 /*break*/, 3];
                     }
                     console.log("Felaktig input\n");
                     return [3 /*break*/, 1];
-                case 3:
-                    add_ingredient();
-                    return [2 /*return*/];
+                case 3: return [2 /*return*/];
             }
         });
     });

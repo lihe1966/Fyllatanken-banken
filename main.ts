@@ -1,7 +1,6 @@
-import { JSDOM } from 'jsdom';
+
 
 import * as readline from 'readline';
-const { document } = new JSDOM(`<!DOCTYPE html><p>Hello</p>`).window;
 
 class Recipe {
     title: string;
@@ -25,7 +24,6 @@ const r4 = new Recipe("Omelett", 4, ["ägg", "mjölk", "salt", "peppar", "smör 
 const r5 = new Recipe("Lasagne", 4, ["gul lök", "vitlöksklyftor", "nötfärs", "olja", "tomatpuré", "torkad timjan", "torkad rosmarin", "krossade tomater", "köttbuljongtärning", "salt", "peppar", "torkade lasagneplattor","smör", "vetemjöl", "mjölk"],["2", "2", "500 g", "1 msk", "4 msk","1 tsk", "1 tsk", "390 g", "1", "1 krm", "1 krm", "9", "6 msk", "6 msk", "10 dl"]);
 const r6 = new Recipe("Havresoppa", 2,["havregryn", "vatten", "salt", "brosk"],["1 dl", "2,5 dl", "0,5 krm", "3 kg"]);
 const allRecipes = [r1, r2, r3, r4, r5, r6];
-const ammountOfRecipes = 6;
 
 
 
@@ -38,12 +36,6 @@ var rl = readline.createInterface({
 });
 
 
-
-document.addEventListener('keydown', (event: KeyboardEvent) => { //Om vi vill använda 
-    if (event.key === '') {
-      console.log('Escape key was pressed!');
-    }
-  });
 
   async function askQuestion(query: string): Promise<string> {
     return new Promise((resolve) => {
@@ -72,15 +64,17 @@ async function add_ingredient() {
     }
 
     console.log("Dina ingredienser är:", ingredients.join(", "));
-    rl.close();
     if(userInput != null){
-        searchFunction(ingredients, allRecipes);
+        searchByIngred(ingredients, allRecipes);
     }
 }
 
-function searchFunction(ings, allRecipes){
+
+
+
+async function searchByIngred(ings: Array<string>, allRecipes: Array<Recipe>){
     let result: [string, number, number][] = []; //titel, mängd korrekta ingredienser, totalt ingredienser i receptet 
-    for(let i = 0; i < ammountOfRecipes; i = i + 1){
+    for(let i = 1; i < allRecipes.length; i = i + 1){
         const countSame = ings.filter(val => allRecipes[i].ingred.includes(val)).length;
         if(countSame >= allRecipes[i].ingred.length - 3){ //Saknas fler än 3 ingredienser behöver receptet inte vara med
             const tempArray: [string, number, number] = [allRecipes[i].title, countSame, allRecipes[i].ingred.length];
@@ -88,30 +82,90 @@ function searchFunction(ings, allRecipes){
         }
     }
     result = result.sort((a, b) => b[1] - a[1]); //Sortera
-    const formattedResult = result.map(([title, count, deniminator]) => [title, `${count}/${deniminator}`]);
+    const formattedResult = result.map(([title, count, deniminator]) => [title, `${count}/${deniminator}`]); //Formaterad
     console.log(formattedResult);
+    console.log("\n\n");
+    while(true){
+        let userInput = await askQuestion("Vill du söka upp något specifikt recept? ")
+        if(userInput === "ja" || userInput === "Ja"){
+            searchByName();
+            break;
+        }
+        if(userInput === "nej" || userInput === "Nej"){
+            main()
+            break;
+        }
+        else{
+            console.log("Felaktig input");
+        }
+    }
+}
+
+
+async function searchByName(){
+    let found: boolean = false;
+    let userInput = await askQuestion("Skriv in en rätt, om du vill gå ur skriv 'klar': ");
+    if(userInput === "klar"){
+        found = true;
+        main();
+    }
+    
+    for(let i = 1; i < allRecipes.length; i = i + 1){
+        if(userInput.toLowerCase() === allRecipes[i].title.toLowerCase()){
+            printRecipe(allRecipes[i]); 
+            found = true; 
+            break;
+        }
+    }
+    if(!found){
+        console.log("Receptet finns inte, testa igen")
+        searchByName();
+    }
     
 }
 
+async function printRecipe(recipe: Recipe){
+    console.clear();
+    console.log("Namn: " + recipe.title);
+    console.log("Antal portioner: " + recipe.port);
+    console.log("Ingredienser: " + recipe.ingred);
+    console.log("Mängder per ingrediens: " + recipe.amounts + "\n");
+    while(true){
+        let userInput = await askQuestion("Skriv 'klar' för att fortsätta: ")
+        if(userInput === "klar" || userInput === "Klar"){
+            main();
+            break;
+        }
+        else{
+            console.log("Felaktig input");
+        }
+    }
+}
 
 
 
 async function main(){
     console.clear();
     console.log("Välkommen till fylla tanken-banken!");
-    console.log("Alterantiv\n 1. Sök recept.\n");
+    console.log("Alterantiv\n 1. Sök recept efter ingredienser.\n 2. Sök recept.\n");
 
     let userInput;
     while(true){
         userInput = await askQuestion(":");
         if(userInput === "1"){
+            add_ingredient();
+            break;
+        }
+        if(userInput === "2"){
+            searchByName(); //Söker utan inmatade ingredienser.
             break;
         }
         console.log("Felaktig input\n");
     }
-    add_ingredient();
     
 }
 
 main();
+
+
 
