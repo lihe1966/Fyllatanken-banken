@@ -25,8 +25,16 @@ export async function skapa_recept_url(url) {
         return h1 ? h1.innerText.trim() : null;
     });
 
+
     // Vänta på att ingredienslistan laddas in
     await page.waitForSelector('#ingredients');
+
+    //Hämta portioner
+    const port = await page.evaluate( ()=> {
+        const porttext = document.querySelector(".ingredients-change-portions div").textContent.trim();
+        const portnumber = parseInt(porttext, 10);
+        return portnumber;
+    })
 
     // Hämta mängderna
     const amounts = await page.evaluate(() => {
@@ -65,9 +73,8 @@ export async function skapa_recept_url(url) {
             });
     });
 
-    console.log(ingredients);
     await browser.close();
-    const r = new Recipe(title, 2, ingredients, amounts);
+    const r = new Recipe(title, port, ingredients, amounts);
 
     return r;
 }
@@ -85,7 +92,7 @@ async function save_recipe(url) {
 
 const r${randomInt(1, 1000)} = new Recipe(
     ${JSON.stringify(recipe.title)},
-    2, 
+    ${recipe.port}, 
     ${JSON.stringify(recipe.ingred)},
     ${JSON.stringify(recipe.amounts)}
 );
@@ -98,8 +105,8 @@ const r${randomInt(1, 1000)} = new Recipe(
 
 
 // Exempelanrop
-//const url = "https://www.ica.se/recept/vafflor-grundrecept-292887/"
-//skapa_recept_url(url)
+const url = "https://www.ica.se/recept/vafflor-grundrecept-292887/"
+skapa_recept_url(url)
 
 
-save_recipe('')
+//save_recipe('')
