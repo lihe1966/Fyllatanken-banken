@@ -1,14 +1,14 @@
 import puppeteer from 'puppeteer';
-import * as fs from 'fs';
+import { promises as fs } from 'fs';
 import { randomInt } from 'crypto';
 
 class Recipe {
-    title: string;
+    title: string ;
     port: number | null;
-    ingred:Array<string>;
+    ingred: Array<string>;
     amounts: Array<string>;
 
-    constructor(title: string, port: number | null = null, ingred: string[], amounts: string[] = []) {
+    constructor(title: string, port: number | null = null, ingred: Array<string>, amounts: Array<string> = []) {
         this.title = title;
         this.port = port;
         this.ingred = ingred;
@@ -16,52 +16,102 @@ class Recipe {
     }
 }
 
-export async function skapa_recept_url(url: string): Promise<Recipe | null> {
+/**
+ * Hämtar recept från ica.se/recept och lagrar som en Recipe-klass
+ * @example
+ * skapa_recept_url('https://www.ica.se/recept/havregrynsgrot-730321/')
+ * // results in:
+ * // Recipe {
+ * //   title: 'Havregrynsgröt',
+ * //   port: 1,
+ * //   ingred: ['havregryn', 'vatten', 'salt', 'mjölk', 'lingonsylt eller äppelmos', 'rårivna eller hackade äpplen', 'honung'],
+ * //   amounts: ['1 dl', '2 1/2 dl', '1/2 krm', '', '', '', '']
+ * // }
+ * @param {string} url - Länk till ett recept på ICA.se
+ * @returns {Promise<Recipe>} Ett Promise som innehåller ett Recipe-objekt
+ */
+export default async function skapa_recept_url(url: string): Promise<Recipe> {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
-
     await page.goto(url, { waitUntil: 'networkidle2' });
 
-    const title = await page.evaluate(() => {
+    // Hämta titel
+    const title: string | null = await page.evaluate(() => {
         const h1 = document.querySelector('h1');
         return h1 ? h1.innerText.trim() : null;
     });
 
-    console.log('Titel:', title);
-
-    if (!title) {
-        await browser.close();
-        return null;
-    }
-
     // Vänta på att ingredienslistan laddas in
-    await page.waitForSelector('.ingredients .ingredients-group ul');
+    await page.waitForSelector('#ingredients');
 
-    // Extrahera ingredienserna
-    const ingredients: string[] = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll('.ingredients .ingredients-group ul li span:nth-child(3)'))
-            .map(li => li.textContent?.trim() || '');
+    // Hämta portioner
+    const port: number | null = await page.evaluate(() => {
+        try {
+            let portElement = document.querySelector(".ingredients-change-portions div") ||
+                              document.querySelector(".default-portions");
+
+            if (!portElement) return null;
+
+            const portText = portElement.textContent?.trim().replace(/\D/g, ""); // Tar bort allt utom siffror
+            return portText ? parseInt(portText, 10) : null;
+        } catch (error) {
+            return null;
+        }
     });
 
+    // Hämta mängderna
     const amounts: string[] = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll('.ingredients .ingredients-group ul li'))
-            .map(li => {
-                const spans = li.querySelectorAll('span');
-                return Array.from(spans)
-                    .slice(0, 2) // Tar bara de två första mått och enhet
-                    .map(span => span.textContent?.trim() || '')
-                    .join(' '); // Slår ihop texten till en sträng
-            })
-            .filter(text => text.length > 0); // Tar bort eventuella tomma strängar
+        return Array.from(document.querySelectorAll('#ingredients .ingredients-list-group__card'))
+            .map(ing => {
+                const qty = ing.querySelector('.ingredients-list-group__card__qty');
+                return qty ? qty.textContent?.trim() ?? "" : "";
+            });
+    });
+
+    // Hämta ingredienserna
+    const ingredients: string[] = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll('#ingredients .ingredients-list-group__card'))
+            .map(ing => {
+                const qty = ing.querySelector('.ingredients-list-group__card__qty');
+                let ingredientText = ing.textContent?.trim() ?? "";
+
+                if (qty) {
+                    ingredientText = ingredientText.replace(qty.textContent ?? "", '').trim();
+                }
+
+                return ingredientText || "";
+            });
     });
 
     await browser.close();
-    return new Recipe(title, 2, ingredients, amounts);
+
+    // Skapa och returnera Recipe-objektet
+    const r = new Recipe(title ?? "Okänt recept", port, ingredients, amounts);
+    console.log(r);
+    return r;
 }
+
+/**
+ * Hämtar ett recept från en given URL och sparar det i en TypeScript-fil.
+ *
+ * @example
+ * save_recipe('https://www.ica.se/recept/havregrynsgrot-730321/')
+ * // Sparar receptet i 'recipe.ts' i följande format:
+ * // const r123 = new Recipe(
+ * //    "Havregrynsgröt",
+ * //    1,
+ * //    ["havregryn", "vatten", "salt", "mjölk", "lingonsylt eller äppelmos",
+ * //    "rårivna eller hackade äpplen", "honung"],
+ * //    ["1 dl", "2 1/2 dl", "1/2 krm", "", "", "", ""]
+ * // );
+ *
+ * @param {string} url - En giltig URL till ett recept på ica.se
+ * @precondition URL:en måste peka på ett recept från ica.se/recept
+ * @returns {Promise<void>} Returnerar inget, men sparar receptet i en fil
+ */
 
 async function save_recipe(url: string): Promise<void> {
     const recipe = await skapa_recept_url(url);
-
     if (!recipe) {
         console.error('Misslyckades att hämta receptet.');
         return;
@@ -69,20 +119,20 @@ async function save_recipe(url: string): Promise<void> {
 
     // Skapa en Recipe-instans i korrekt format
     const recipeContent = `
-
 const r${randomInt(1, 1000)} = new Recipe(
     ${JSON.stringify(recipe.title)},
-    2, 
+    ${recipe.port},
     ${JSON.stringify(recipe.ingred)},
     ${JSON.stringify(recipe.amounts)}
-);
-
-`;
+);`;
 
     // Lägg till receptet i filen utan att skriva över tidigare data
-    fs.appendFileSync('recipe.ts', recipeContent, 'utf8');
+    await fs.appendFile('recipe.ts', recipeContent, 'utf8');
     console.log('Receptet har lagts till i recipe.ts!');
 }
 
-// Exempel på anrop
-save_recipe("https://undertian.com/recept/broccolipasta/");
+// Exempelanrop
+const url = "https://www.ica.se/recept/havregrynsgrot-730321/";
+skapa_recept_url(url);
+
+save_recipe(url);
