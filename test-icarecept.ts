@@ -1,8 +1,8 @@
 import puppeteer from 'puppeteer';
 import { promises as fs } from 'fs';
-import { randomInt } from 'crypto';
 
-class Recipe {
+
+export class Recipe {
     title: string ;
     port: number | null;
     ingred: Array<string>;
@@ -87,7 +87,6 @@ export default async function skapa_recept_url(url: string): Promise<Recipe> {
 
     // Skapa och returnera Recipe-objektet
     const r = new Recipe(title ?? "Okänt recept", port, ingredients, amounts);
-    console.log(r);
     return r;
 }
 
@@ -119,7 +118,8 @@ async function save_recipe(url: string): Promise<void> {
 
     // Skapa en Recipe-instans i korrekt format
     const recipeContent = `
-const r${randomInt(1, 1000)} = new Recipe(
+
+const r${Date.now()} = new Recipe(
     ${JSON.stringify(recipe.title)},
     ${recipe.port},
     ${JSON.stringify(recipe.ingred)},
@@ -133,6 +133,6 @@ const r${randomInt(1, 1000)} = new Recipe(
 
 // Exempelanrop
 const url = "https://www.ica.se/recept/havregrynsgrot-730321/";
-skapa_recept_url(url);
+//skapa_recept_url(url);
 
-save_recipe(url);
+//save_recipe(url);

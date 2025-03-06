@@ -36,10 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Recipe = void 0;
 exports.default = skapa_recept_url;
 var puppeteer_1 = require("puppeteer");
 var fs_1 = require("fs");
-var crypto_1 = require("crypto");
 var Recipe = /** @class */ (function () {
     function Recipe(title, port, ingred, amounts) {
         if (port === void 0) { port = null; }
@@ -51,6 +51,7 @@ var Recipe = /** @class */ (function () {
     }
     return Recipe;
 }());
+exports.Recipe = Recipe;
 /**
  * Hämtar recept från ica.se/recept och lagrar som en Recipe-klass
  * @example
@@ -134,7 +135,6 @@ function skapa_recept_url(url) {
                 case 9:
                     _a.sent();
                     r = new Recipe(title !== null && title !== void 0 ? title : "Okänt recept", port, ingredients, amounts);
-                    console.log(r);
                     return [2 /*return*/, r];
             }
         });
@@ -170,7 +170,7 @@ function save_recipe(url) {
                         console.error('Misslyckades att hämta receptet.');
                         return [2 /*return*/];
                     }
-                    recipeContent = "\nconst r".concat((0, crypto_1.randomInt)(1, 1000), " = new Recipe(\n    ").concat(JSON.stringify(recipe.title), ",\n    ").concat(recipe.port, ",\n    ").concat(JSON.stringify(recipe.ingred), ",\n    ").concat(JSON.stringify(recipe.amounts), "\n);");
+                    recipeContent = "\n\nconst r".concat(Date.now(), " = new Recipe(\n    ").concat(JSON.stringify(recipe.title), ",\n    ").concat(recipe.port, ",\n    ").concat(JSON.stringify(recipe.ingred), ",\n    ").concat(JSON.stringify(recipe.amounts), "\n);");
                     // Lägg till receptet i filen utan att skriva över tidigare data
                     return [4 /*yield*/, fs_1.promises.appendFile('recipe.ts', recipeContent, 'utf8')];
                 case 2:
@@ -184,5 +184,5 @@ function save_recipe(url) {
 }
 // Exempelanrop
 var url = "https://www.ica.se/recept/havregrynsgrot-730321/";
-skapa_recept_url(url);
+//skapa_recept_url(url);
 save_recipe(url);
