@@ -2,7 +2,6 @@ import puppeteer from 'puppeteer';
 import fs from 'fs';
 import { randomInt } from 'crypto';
 
-
 class Recipe {
     constructor(title, port = null, ingred, amounts = []) {
         this.title = title;
@@ -12,7 +11,23 @@ class Recipe {
     }
 }
 
-/**Function specification */
+/**
+* Hämtar recept från ica.se/recept och lagrar som class Recipe
+* @example
+* skapa_Recept_url('https://www.ica.se/recept/havregrynsgrot-730321/')
+* //results in:
+* //Recipe {
+* //   title: 'Havregrynsgröt',
+* //   port: 1,
+* //  ingred: [
+* //    'havregryn','vatten','salt','mjölk', 'lingonsylt eller äppelmos',
+* //    'rårivna eller hackade äpplen', 'honung'],
+* //  amounts: [ '1 dl', '2 1/2 dl', '1/2 krm', '', '', '', '' ]
+* //}
+* @param {string} url - recipe from ica.se/recept
+* @precondition valid recipe-link specificallly from ica.se/recept
+* @returns {Promise<Recipe>} Ett promise av objektet Recipe
+ */
 
 export async function skapa_recept_url(url) {
     const browser = await puppeteer.launch({ headless: true });
@@ -30,16 +45,32 @@ export async function skapa_recept_url(url) {
     await page.waitForSelector('#ingredients');
 
     //Hämta portioner
-    const port = await page.evaluate( ()=> {
-        const porttext = document.querySelector(".ingredients-change-portions div").textContent.trim();
-        const portnumber = parseInt(porttext, 10);
-        return portnumber;
-    })
+    const port = await page.evaluate(() => {
+        try {
+            // Försök hitta portioner med den första selektorn
+            let portElement = document.querySelector(".ingredients-change-portions div");
+
+            // Om det inte hittas, försök med den alternativa selektorn
+            if (!portElement) {
+                portElement = document.querySelector(".default-portions");
+            }
+
+            // Om fortfarande inget hittades, returnera null
+            if (!portElement) return null;
+
+            // Hämta texten och extrahera siffrorna
+            const portText = portElement.textContent.trim().replace(/\D/g, ""); // Tar bort allt utom siffror
+            return parseInt(portText, 10) || null;
+        } catch (error) {
+            return null; // Hanterar eventuella fel
+        }
+    });
+
 
     // Hämta mängderna
     const amounts = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll('#ingredients .ingredients-list-group__card'))
-            .map(ing => {
+        return Array.from(document.querySelectorAll(
+            '#ingredients .ingredients-list-group__card')).map(ing => {
                 // Hämta bara innehållet i <span class="ingredients-list-group__card__qty">
                 const qty = ing.querySelector('.ingredients-list-group__card__qty');
 
@@ -75,7 +106,7 @@ export async function skapa_recept_url(url) {
 
     await browser.close();
     const r = new Recipe(title, port, ingredients, amounts);
-
+    console.log(r);
     return r;
 }
 
@@ -89,15 +120,13 @@ async function save_recipe(url) {
 
     // Skapa en Recipe-instans i korrekt format
     const recipeContent = `
-
 const r${randomInt(1, 1000)} = new Recipe(
     ${JSON.stringify(recipe.title)},
-    ${recipe.port}, 
+    ${recipe.port},
     ${JSON.stringify(recipe.ingred)},
     ${JSON.stringify(recipe.amounts)}
-);
-`;
- // Lägg till receptet i filen utan att skriva över tidigare data
+);`;
+    // Lägg till receptet i filen utan att skriva över tidigare data
     fs.appendFileSync('recipe.ts', recipeContent, 'utf8');
     console.log('Receptet har lagts till i recipe.ts!');
 }
@@ -105,8 +134,8 @@ const r${randomInt(1, 1000)} = new Recipe(
 
 
 // Exempelanrop
-const url = "https://www.ica.se/recept/vafflor-grundrecept-292887/"
+const url = "https://www.ica.se/recept/havregrynsgrot-730321/"
 skapa_recept_url(url)
+//console.log(r);
 
-
-//save_recipe('')
+//save_recipe('https://www.ica.se/recept/blomkal-och-svampbolognese-730053/')

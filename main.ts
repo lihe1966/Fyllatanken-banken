@@ -1,7 +1,4 @@
-
-
 import * as readline from 'readline';
-
 class Recipe {
     title: string;
     port: number; //antal portioner
@@ -14,7 +11,6 @@ class Recipe {
         this.amounts = amounts;
     }
 }
-
 //VARIABLES
 
 const r1 = new Recipe("Köttbullar", 2, ["färs", "mjölk", "ströbröd", "gul lök", "ägg", "salt", "peppar"],["500g", "1,5 dl", "5 msk", "1/2", "1", "1 tsk", "1 krm" ]);
@@ -53,11 +49,11 @@ async function add_ingredient() {
 
     while (true) {
         userInput = await askQuestion(": ");
-        
+
         if (userInput.toLowerCase() === "klar") {
             break;
         }
-        
+
         ingredients.push(userInput);
         console.clear();
         console.log("Nuvarande ingredienser:", ingredients.join(", "));
@@ -68,12 +64,8 @@ async function add_ingredient() {
         searchByIngred(ingredients, allRecipes);
     }
 }
-
-
-
-
 async function searchByIngred(ings: Array<string>, allRecipes: Array<Recipe>){
-    let result: [string, number, number][] = []; //titel, mängd korrekta ingredienser, totalt ingredienser i receptet 
+    let result: [string, number, number][] = []; //titel, mängd korrekta ingredienser, totalt ingredienser i receptet
     for(let i = 1; i < allRecipes.length; i = i + 1){
         const countSame = ings.filter(val => allRecipes[i].ingred.includes(val)).length;
         if(countSame >= allRecipes[i].ingred.length - 3){ //Saknas fler än 3 ingredienser behöver receptet inte vara med
@@ -109,11 +101,11 @@ async function searchByName(){
         found = true;
         main();
     }
-    
+
     for(let i = 1; i < allRecipes.length; i = i + 1){
         if(userInput.toLowerCase() === allRecipes[i].title.toLowerCase()){
-            printRecipe(allRecipes[i]); 
-            found = true; 
+            printRecipe(allRecipes[i]);
+            found = true;
             break;
         }
     }
@@ -121,7 +113,7 @@ async function searchByName(){
         console.log("Receptet finns inte, testa igen")
         searchByName();
     }
-    
+
 }
 
 async function printRecipe(recipe: Recipe){
@@ -162,7 +154,7 @@ async function main(){
         }
         console.log("Felaktig input\n");
     }
-    
+
 }
 
 main();
