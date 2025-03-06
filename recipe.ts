@@ -123,21 +123,6 @@ const r171 = new Recipe(
     ["blomkålshuvud", "rökt paprikapulver", "raps- eller olivolja", "gul lök", "vitlöksklyftor", "spiskummin", "krossade eller hela tomater", "grönsaksbuljongtärning", "sambal oelek eller tabasco", "valfria bönor ex. kidneybönor/vita bönor/svarta bönor", "Salt & svartpeppar"],
     ["1 st", "1 tsk", "1 tsk", "2 st", "2 st", "1 msk", "8 dl", "1 st", "1 krm", "6 dl", " "]
 );
-
-const r988 = new Recipe(
-    "Broccolipasta",
-    2,
-    ["solroskärnor", "havredryck", "broccoli, fryst eller färsk", "vitlöksklyftor", "ost, riven", "Olja att steka i", "Salt & svartpeppar", "pasta"],
-    ["2 dl", "3 dl", "500 g", "2 st", "1 dl", " ", " ", "4 port"]
-);
-
-const r447 = new Recipe(
-    "Broccolipasta",
-    2,
-    ["solroskärnor", "havredryck", "broccoli, fryst eller färsk", "vitlöksklyftor", "ost, riven", "Olja att steka i", "Salt & svartpeppar", "pasta"],
-    ["2 dl", "3 dl", "500 g", "2 st", "1 dl", " ", " ", "4 port"]
-);
-
 const r51 = new Recipe(
     "Broccolipasta",
     2,
@@ -242,4 +227,11 @@ const r903 = new Recipe(
     4,
     ["vitlöksklyftor", "blomkål (1/2 blomkål motsvarar ca 350 g)", "champinjoner", "olja", "chilipulver", "tomatpuré", "krossade tomater", "grönsaksbuljongtärning", "dijonsenap", "vatten", "salt", "svartpeppar", "pasta (gärna rigatoni)", "pastavatten", "finhackad persilja", "riven parmesan (gör laktovegetarisk välj ost utan löpe)"],
     ["3", "1/2", "250 g", "3 msk", "2 tsk", "2 msk", "380 g", "1", "1 msk", "2 dl", "", "", "400 g", "1 - 2 dl", "1 dl", ""]
+);
+
+const r1741274185737 = new Recipe(
+    "Havregrynsgröt",
+    1,
+    ["havregryn","vatten","salt","mjölk","lingonsylt eller äppelmos","rårivna eller hackade äpplen","honung"],
+    ["1 dl","2 1/2 dl","1/2 krm","","","",""]
 );

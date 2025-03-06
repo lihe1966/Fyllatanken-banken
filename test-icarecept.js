@@ -185,4 +185,4 @@ function save_recipe(url) {
 // Exempelanrop
 var url = "https://www.ica.se/recept/havregrynsgrot-730321/";
 //skapa_recept_url(url);
-save_recipe(url);
+//save_recipe(url);

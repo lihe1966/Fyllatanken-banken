@@ -26,4 +26,4 @@ test("Skapar en tom sträng för en ingrediens utan mått", async () => {
     expect(recipe.amounts[3]).toBe("");
 });
 
-test("")
+//test("")
