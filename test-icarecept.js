@@ -140,7 +140,24 @@ function skapa_recept_url(url) {
         });
     });
 }
-/** Funktion för att spara recept till en fil */
+/**
+ * Hämtar ett recept från en given URL och sparar det i en TypeScript-fil.
+ *
+ * @example
+ * save_recipe('https://www.ica.se/recept/havregrynsgrot-730321/')
+ * // Sparar receptet i 'recipe.ts' i följande format:
+ * // const r123 = new Recipe(
+ * //    "Havregrynsgröt",
+ * //    1,
+ * //    ["havregryn", "vatten", "salt", "mjölk", "lingonsylt eller äppelmos",
+ * //    "rårivna eller hackade äpplen", "honung"],
+ * //    ["1 dl", "2 1/2 dl", "1/2 krm", "", "", "", ""]
+ * // );
+ *
+ * @param {string} url - En giltig URL till ett recept på ica.se
+ * @precondition URL:en måste peka på ett recept från ica.se/recept
+ * @returns {Promise<void>} Returnerar inget, men sparar receptet i en fil
+ */
 function save_recipe(url) {
     return __awaiter(this, void 0, void 0, function () {
         var recipe, recipeContent;

@@ -23,7 +23,7 @@ class Recipe {
 * //    'havregryn','vatten','salt','mjölk', 'lingonsylt eller äppelmos',
 * //    'rårivna eller hackade äpplen', 'honung'],
 * //  amounts: [ '1 dl', '2 1/2 dl', '1/2 krm', '', '', '', '' ]
-* //}
+}
 * @param {string} url - recipe from ica.se/recept
 * @precondition valid recipe-link specificallly from ica.se/recept
 * @returns {Promise<Recipe>} Ett promise av objektet Recipe

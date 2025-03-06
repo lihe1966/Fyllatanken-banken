@@ -243,3 +243,15 @@ const r903 = new Recipe(
     ["vitlöksklyftor", "blomkål (1/2 blomkål motsvarar ca 350 g)", "champinjoner", "olja", "chilipulver", "tomatpuré", "krossade tomater", "grönsaksbuljongtärning", "dijonsenap", "vatten", "salt", "svartpeppar", "pasta (gärna rigatoni)", "pastavatten", "finhackad persilja", "riven parmesan (gör laktovegetarisk välj ost utan löpe)"],
     ["3", "1/2", "250 g", "3 msk", "2 tsk", "2 msk", "380 g", "1", "1 msk", "2 dl", "", "", "400 g", "1 - 2 dl", "1 dl", ""]
 );
+const r742 = new Recipe(
+    "Havregrynsgröt",
+    1,
+    ["havregryn","vatten","salt","mjölk","lingonsylt eller äppelmos","rårivna eller hackade äpplen","honung"],
+    ["1 dl","2 1/2 dl","1/2 krm","","","",""]
+);
+const r284 = new Recipe(
+    "Havregrynsgröt",
+    1,
+    ["havregryn","vatten","salt","mjölk","lingonsylt eller äppelmos","rårivna eller hackade äpplen","honung"],
+    ["1 dl","2 1/2 dl","1/2 krm","","","",""]
+);
