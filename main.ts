@@ -1,16 +1,20 @@
 import * as readline from 'readline';
-class Recipe {
-    title: string;
-    port: number; //antal portioner
-    ingred: Array<string>
-    amounts: Array<string>
-    constructor(title: string, port: number, ingred: Array<string>, amounts: Array<string> = []) {
-        this.title = title;
-        this.port = port;
-        this.ingred = ingred;
-        this.amounts = amounts;
-    }
-}
+import { Recipe } from './recipe'; 
+import { queryObjects } from 'v8';
+import * as fs from 'fs';
+
+// class Recipe {
+//     title: string;
+//     port: number; //antal portioner
+//     ingred: Array<string>
+//     amounts: Array<string>
+//     constructor(title: string, port: number, ingred: Array<string>, amounts: Array<string> = []) {
+//         this.title = title;
+//         this.port = port;
+//         this.ingred = ingred;
+//         this.amounts = amounts;
+//     }
+// }
 //VARIABLES
 
 const r1 = new Recipe("Köttbullar", 2, ["färs", "mjölk", "ströbröd", "gul lök", "ägg", "salt", "peppar"],["500g", "1,5 dl", "5 msk", "1/2", "1", "1 tsk", "1 krm" ]);
@@ -19,14 +23,14 @@ const r3 = new Recipe("Pelmeni", 4,["vetemjöl", "ägg", "salt", "färs", "gul l
 const r4 = new Recipe("Omelett", 4, ["ägg", "mjölk", "salt", "peppar", "smör eller margarin"],["6", "1 dl", "1/2 tsk", "1 krm", "2 msk"]);
 const r5 = new Recipe("Lasagne", 4, ["gul lök", "vitlöksklyftor", "nötfärs", "olja", "tomatpuré", "torkad timjan", "torkad rosmarin", "krossade tomater", "köttbuljongtärning", "salt", "peppar", "torkade lasagneplattor","smör", "vetemjöl", "mjölk"],["2", "2", "500 g", "1 msk", "4 msk","1 tsk", "1 tsk", "390 g", "1", "1 krm", "1 krm", "9", "6 msk", "6 msk", "10 dl"]);
 const r6 = new Recipe("Havresoppa", 2,["havregryn", "vatten", "salt", "brosk"],["1 dl", "2,5 dl", "0,5 krm", "3 kg"]);
-const allRecipes = [r1, r2, r3, r4, r5, r6];
+//const allRecipes = [r1, r2, r3, r4, r5, r6];
+
+
+const allRecipes = Recipe.getInstances();
 
 
 
-
-
-
-var rl = readline.createInterface({
+var rl = readline.createInterface({ // vad betyder detta
   input: process.stdin,
   output: process.stdout
 });
@@ -68,13 +72,13 @@ async function searchByIngred(ings: Array<string>, allRecipes: Array<Recipe>){
     let result: [string, number, number][] = []; //titel, mängd korrekta ingredienser, totalt ingredienser i receptet
     for(let i = 1; i < allRecipes.length; i = i + 1){
         const countSame = ings.filter(val => allRecipes[i].ingred.includes(val)).length;
-        if(countSame >= allRecipes[i].ingred.length - 3){ //Saknas fler än 3 ingredienser behöver receptet inte vara med
+        if(countSame > 0){
             const tempArray: [string, number, number] = [allRecipes[i].title, countSame, allRecipes[i].ingred.length];
             result.push(tempArray);
         }
     }
     result = result.sort((a, b) => b[1] - a[1]); //Sortera
-    const formattedResult = result.map(([title, count, deniminator]) => [title, `${count}/${deniminator}`]); //Formaterad
+    const formattedResult = result.map(([title, count, deniminator]) => [title, ` Du har ${count}/${deniminator} ingredienser`]); //Formaterad
     console.log(formattedResult);
     console.log("\n\n");
     while(true){

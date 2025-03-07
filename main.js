@@ -37,24 +37,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var readline = require("readline");
-var Recipe = /** @class */ (function () {
-    function Recipe(title, port, ingred, amounts) {
-        if (amounts === void 0) { amounts = []; }
-        this.title = title;
-        this.port = port;
-        this.ingred = ingred;
-        this.amounts = amounts;
-    }
-    return Recipe;
-}());
+var recipe_1 = require("./recipe");
+// class Recipe {
+//     title: string;
+//     port: number; //antal portioner
+//     ingred: Array<string>
+//     amounts: Array<string>
+//     constructor(title: string, port: number, ingred: Array<string>, amounts: Array<string> = []) {
+//         this.title = title;
+//         this.port = port;
+//         this.ingred = ingred;
+//         this.amounts = amounts;
+//     }
+// }
 //VARIABLES
-var r1 = new Recipe("Köttbullar", 2, ["färs", "mjölk", "ströbröd", "gul lök", "ägg", "salt", "peppar"], ["500g", "1,5 dl", "5 msk", "1/2", "1", "1 tsk", "1 krm"]);
-var r2 = new Recipe("Havregrynsgröt", 3, ["havregryn", "vatten", "salt"], ["1 dl", "2,5 dl", "0,5 krm"]);
-var r3 = new Recipe("Pelmeni", 4, ["vetemjöl", "ägg", "salt", "färs", "gul lök", "salt", "peppar"], ["300g", "3", "1/2 tsk", "300g", "1", "1 krm", "1 krm"]);
-var r4 = new Recipe("Omelett", 4, ["ägg", "mjölk", "salt", "peppar", "smör eller margarin"], ["6", "1 dl", "1/2 tsk", "1 krm", "2 msk"]);
-var r5 = new Recipe("Lasagne", 4, ["gul lök", "vitlöksklyftor", "nötfärs", "olja", "tomatpuré", "torkad timjan", "torkad rosmarin", "krossade tomater", "köttbuljongtärning", "salt", "peppar", "torkade lasagneplattor", "smör", "vetemjöl", "mjölk"], ["2", "2", "500 g", "1 msk", "4 msk", "1 tsk", "1 tsk", "390 g", "1", "1 krm", "1 krm", "9", "6 msk", "6 msk", "10 dl"]);
-var r6 = new Recipe("Havresoppa", 2, ["havregryn", "vatten", "salt", "brosk"], ["1 dl", "2,5 dl", "0,5 krm", "3 kg"]);
-var allRecipes = [r1, r2, r3, r4, r5, r6];
+var r1 = new recipe_1.Recipe("Köttbullar", 2, ["färs", "mjölk", "ströbröd", "gul lök", "ägg", "salt", "peppar"], ["500g", "1,5 dl", "5 msk", "1/2", "1", "1 tsk", "1 krm"]);
+var r2 = new recipe_1.Recipe("Havregrynsgröt", 3, ["havregryn", "vatten", "salt"], ["1 dl", "2,5 dl", "0,5 krm"]);
+var r3 = new recipe_1.Recipe("Pelmeni", 4, ["vetemjöl", "ägg", "salt", "färs", "gul lök", "salt", "peppar"], ["300g", "3", "1/2 tsk", "300g", "1", "1 krm", "1 krm"]);
+var r4 = new recipe_1.Recipe("Omelett", 4, ["ägg", "mjölk", "salt", "peppar", "smör eller margarin"], ["6", "1 dl", "1/2 tsk", "1 krm", "2 msk"]);
+var r5 = new recipe_1.Recipe("Lasagne", 4, ["gul lök", "vitlöksklyftor", "nötfärs", "olja", "tomatpuré", "torkad timjan", "torkad rosmarin", "krossade tomater", "köttbuljongtärning", "salt", "peppar", "torkade lasagneplattor", "smör", "vetemjöl", "mjölk"], ["2", "2", "500 g", "1 msk", "4 msk", "1 tsk", "1 tsk", "390 g", "1", "1 krm", "1 krm", "9", "6 msk", "6 msk", "10 dl"]);
+var r6 = new recipe_1.Recipe("Havresoppa", 2, ["havregryn", "vatten", "salt", "brosk"], ["1 dl", "2,5 dl", "0,5 krm", "3 kg"]);
+//const allRecipes = [r1, r2, r3, r4, r5, r6];
+var allRecipes = recipe_1.Recipe.getInstances();
 var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -111,7 +115,7 @@ function searchByIngred(ings, allRecipes) {
                     result = [];
                     _loop_1 = function (i) {
                         var countSame = ings.filter(function (val) { return allRecipes[i].ingred.includes(val); }).length;
-                        if (countSame >= allRecipes[i].ingred.length - 3) { //Saknas fler än 3 ingredienser behöver receptet inte vara med
+                        if (countSame > 0) {
                             var tempArray = [allRecipes[i].title, countSame, allRecipes[i].ingred.length];
                             result.push(tempArray);
                         }
@@ -122,7 +126,7 @@ function searchByIngred(ings, allRecipes) {
                     result = result.sort(function (a, b) { return b[1] - a[1]; }); //Sortera
                     formattedResult = result.map(function (_a) {
                         var title = _a[0], count = _a[1], deniminator = _a[2];
-                        return [title, "".concat(count, "/").concat(deniminator)];
+                        return [title, " Du har ".concat(count, "/").concat(deniminator, " ingredienser")];
                     });
                     console.log(formattedResult);
                     console.log("\n\n");

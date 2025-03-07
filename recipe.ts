@@ -1,17 +1,23 @@
+import { queryObjects } from "v8";
+
 export class Recipe {
     title: string;
     port: number;
     ingred: string[];
     amounts: string[];
+    private static instances: Recipe[] = [];
 
     constructor(title: string, port: number, ingred: string[], amounts: string[] = []) {
         this.title = title;
         this.port = port;
         this.ingred = ingred;
         this.amounts = amounts;
+        Recipe.instances.push(this);
+    }
+    static getInstances(): Recipe[] {
+        return Recipe.instances;
     }
 }
-
 const r653 = new Recipe(
     "Gråärtsbolognese",
     2,
@@ -235,3 +241,6 @@ const r1741274185737 = new Recipe(
     ["havregryn","vatten","salt","mjölk","lingonsylt eller äppelmos","rårivna eller hackade äpplen","honung"],
     ["1 dl","2 1/2 dl","1/2 krm","","","",""]
 );
+
+
+console.log(Recipe.getInstances());
