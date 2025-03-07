@@ -1,4 +1,22 @@
 "use strict";
+/**
+ * Class representing a recipe.
+ * It includes the title of the recipe, the number of portions,
+ * the ingredients and the amount/quantity of each ingredient.
+ * @class Recipe
+ * @property {string} title - The title of the recipe.
+ * @property {number} port - The number of portions the recipe is for.
+ * @property {string[]} ingred - The ingredients of the recipe.
+ * @property {string[]} amounts - The amounts of the ingredients in the recipe.
+ * @property {Recipe[]} instances - An array of all instances of the class.
+ * @method getInstances - Static method that returns all instances of the class.
+ *
+ *  @example
+ * // Create a new recipe
+ * const recipe = new Recipe("Pancakes", 4, ["Flour", "Milk", "Eggs"], ["2 cups", "1 cup", "2"]);
+ * console.log(Recipe.getInstances()); // Returns an array of all recipes
+ *
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Recipe = void 0;
 var Recipe = /** @class */ (function () {
@@ -49,4 +67,3 @@ var r199 = new Recipe("Vegansk lasagne", 2, ["gula lökar", "vitlöksklyftor", "
 var r151 = new Recipe("Zucchinibiffar med fetaost", 4, ["couscous", "kokta kikärtor (à 380 g)", "citron (skal och 1 msk saft, för 4 port)", "ägg", "vetemjöl", "salt", "chiliflakes", "zucchini (à ca 300 g)", "fetaost (à 150 g)", "olja", "smulad fetaost", "tomater", "basilika", "couscous", "tomatsås"], ["1 dl", "1 förp", "1/2", "2", "1 dl", "1 tsk", "2 krm", "1", "1/2 förp", "2 msk", "", "", "", "", ""]);
 var r903 = new Recipe("Blomkål- och svampbolognese", 4, ["vitlöksklyftor", "blomkål (1/2 blomkål motsvarar ca 350 g)", "champinjoner", "olja", "chilipulver", "tomatpuré", "krossade tomater", "grönsaksbuljongtärning", "dijonsenap", "vatten", "salt", "svartpeppar", "pasta (gärna rigatoni)", "pastavatten", "finhackad persilja", "riven parmesan (gör laktovegetarisk välj ost utan löpe)"], ["3", "1/2", "250 g", "3 msk", "2 tsk", "2 msk", "380 g", "1", "1 msk", "2 dl", "", "", "400 g", "1 - 2 dl", "1 dl", ""]);
 var r1741274185737 = new Recipe("Havregrynsgröt", 1, ["havregryn", "vatten", "salt", "mjölk", "lingonsylt eller äppelmos", "rårivna eller hackade äpplen", "honung"], ["1 dl", "2 1/2 dl", "1/2 krm", "", "", "", ""]);
-console.log(Recipe.getInstances());
