@@ -1,4 +1,21 @@
-import { queryObjects } from "v8";
+/**
+ * Class representing a recipe.
+ * It includes the title of the recipe, the number of portions,
+ * the ingredients and the amount/quantity of each ingredient.
+ * @class Recipe
+ * @property {string} title - The title of the recipe.
+ * @property {number} port - The number of portions the recipe is for.
+ * @property {string[]} ingred - The ingredients of the recipe.
+ * @property {string[]} amounts - The amounts of the ingredients in the recipe.
+ * @property {Recipe[]} instances - An array of all instances of the class.
+ * @method getInstances - Static method that returns all instances of the class.
+ *
+ *  @example
+ * // Create a new recipe
+ * const recipe = new Recipe("Pancakes", 4, ["Flour", "Milk", "Eggs"], ["2 cups", "1 cup", "2"]);
+ * console.log(Recipe.getInstances()); // Returns an array of all recipes
+ *
+ */
 
 export class Recipe {
     title: string;
@@ -241,6 +258,3 @@ const r1741274185737 = new Recipe(
     ["havregryn","vatten","salt","mjölk","lingonsylt eller äppelmos","rårivna eller hackade äpplen","honung"],
     ["1 dl","2 1/2 dl","1/2 krm","","","",""]
 );
-
-
-console.log(Recipe.getInstances());
