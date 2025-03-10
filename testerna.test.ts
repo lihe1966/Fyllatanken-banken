@@ -1,6 +1,5 @@
 
-import skapa_recept_url from "./test-icarecept"
-import { Recipe } from "./test-icarecept"
+import skapa_recept_url from "./get-ica-recipes";
 
 test("Testar att skapa ett skapa_recept_url", async () => {
     const url = "https://www.ica.se/recept/kladdig-kladdkaka-722982/";

@@ -1,36 +1,23 @@
 import puppeteer from 'puppeteer';
 import { promises as fs } from 'fs';
-
-
-export class Recipe {
-    title: string ;
-    port: number | null;
-    ingred: Array<string>;
-    amounts: Array<string>;
-
-    constructor(title: string, port: number | null = null, ingred: Array<string>, amounts: Array<string> = []) {
-        this.title = title;
-        this.port = port;
-        this.ingred = ingred;
-        this.amounts = amounts;
-    }
-}
+import { Recipe } from './recipe'; // Importera Recipe-klassen från recipe.ts
 
 /**
- * Hämtar recept från ica.se/recept och lagrar som en Recipe-klass
+ * Retrieves a recipe from a given URL on ica.se and returns it as a Recipe object.
  * @example
- * skapa_recept_url('https://www.ica.se/recept/havregrynsgrot-730321/')
+ * create_recipe_url('https://www.ica.se/recept/havregrynsgrot-730321/')
  * // results in:
  * // Recipe {
  * //   title: 'Havregrynsgröt',
  * //   port: 1,
- * //   ingred: ['havregryn', 'vatten', 'salt', 'mjölk', 'lingonsylt eller äppelmos', 'rårivna eller hackade äpplen', 'honung'],
+ * //   ingred: ['havregryn', 'vatten', 'salt', 'mjölk',
+ * // 'lingonsylt eller äppelmos', 'rårivna eller hackade äpplen', 'honung'],
  * //   amounts: ['1 dl', '2 1/2 dl', '1/2 krm', '', '', '', '']
  * // }
- * @param {string} url - Länk till ett recept på ICA.se
- * @returns {Promise<Recipe>} Ett Promise som innehåller ett Recipe-objekt
+ * @param {string} url - link to a recipe on ica.se
+ * @returns {Promise<Recipe>} - a promise that resolves to a Recipe object
  */
-export default async function skapa_recept_url(url: string): Promise<Recipe> {
+export default async function create_recipe_url(url: string): Promise<Recipe> {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: 'networkidle2' });
@@ -47,21 +34,26 @@ export default async function skapa_recept_url(url: string): Promise<Recipe> {
     // Hämta portioner
     const port: number | null = await page.evaluate(() => {
         try {
-            let portElement = document.querySelector(".ingredients-change-portions div") ||
-                              document.querySelector(".default-portions");
+            let portElement =
+                document.querySelector(".ingredients-change-portions div")
+                || document.querySelector(".default-portions");
+            if (!portElement) return null; // Om portioner inte finns
 
-            if (!portElement) return null;
+            // Ta bort allt utom siffror
+            const portText = portElement.textContent?.trim().replace(/\D/g, "");
 
-            const portText = portElement.textContent?.trim().replace(/\D/g, ""); // Tar bort allt utom siffror
+            //Parse och få ut siffran, returnera null om det inte finns någon siffra
             return portText ? parseInt(portText, 10) : null;
+
         } catch (error) {
             return null;
         }
     });
 
     // Hämta mängderna
-    const amounts: string[] = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll('#ingredients .ingredients-list-group__card'))
+    const amounts: Array<string> = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll(
+            '#ingredients .ingredients-list-group__card'))
             .map(ing => {
                 const qty = ing.querySelector('.ingredients-list-group__card__qty');
                 return qty ? qty.textContent?.trim() ?? "" : "";
@@ -69,16 +61,18 @@ export default async function skapa_recept_url(url: string): Promise<Recipe> {
     });
 
     // Hämta ingredienserna
-    const ingredients: string[] = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll('#ingredients .ingredients-list-group__card'))
+    const ingredients: Array<string> = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll(
+            '#ingredients .ingredients-list-group__card'))
             .map(ing => {
-                const qty = ing.querySelector('.ingredients-list-group__card__qty');
+                const qty = ing.querySelector(
+                    '.ingredients-list-group__card__qty');
                 let ingredientText = ing.textContent?.trim() ?? "";
 
                 if (qty) {
-                    ingredientText = ingredientText.replace(qty.textContent ?? "", '').trim();
+                    ingredientText = ingredientText.replace(
+                        qty.textContent ?? "", '').trim();
                 }
-
                 return ingredientText || "";
             });
     });
@@ -91,11 +85,12 @@ export default async function skapa_recept_url(url: string): Promise<Recipe> {
 }
 
 /**
- * Hämtar ett recept från en given URL och sparar det i en TypeScript-fil.
- *
+ * Retrieves a recipe from a given URL on ica.se and saves it to a file
+ * in TypeScript format.
  * @example
  * save_recipe('https://www.ica.se/recept/havregrynsgrot-730321/')
- * // Sparar receptet i 'recipe.ts' i följande format:
+ * // Creates a new Recipe instance in TypeScript format in recipe.ts
+ * // with the following content:
  * // const r123 = new Recipe(
  * //    "Havregrynsgröt",
  * //    1,
@@ -104,19 +99,19 @@ export default async function skapa_recept_url(url: string): Promise<Recipe> {
  * //    ["1 dl", "2 1/2 dl", "1/2 krm", "", "", "", ""]
  * // );
  *
- * @param {string} url - En giltig URL till ett recept på ica.se
- * @precondition URL:en måste peka på ett recept från ica.se/recept
- * @returns {Promise<void>} Returnerar inget, men sparar receptet i en fil
+ * @param {string} url - A valid URL to a recipe on ica.se
+ * @precondition URL must point to a recipe on ica.se/recept
+ * @returns {Promise<void>} Returns nothing, but writes to a file
  */
 
 async function save_recipe(url: string): Promise<void> {
-    const recipe = await skapa_recept_url(url);
+    const recipe = await create_recipe_url(url);
     if (!recipe) {
         console.error('Misslyckades att hämta receptet.');
         return;
     }
 
-    // Skapa en Recipe-instans i korrekt format
+    // Skapa en Recipe-instans i TypeScript-format för att lägga till i filen
     const recipeContent = `
 
 const r${Date.now()} = new Recipe(
@@ -133,6 +128,6 @@ const r${Date.now()} = new Recipe(
 
 // Exempelanrop
 const url = "https://www.ica.se/recept/havregrynsgrot-730321/";
-//skapa_recept_url(url);
+//create_recipe_url(url);
 
 //save_recipe(url);
