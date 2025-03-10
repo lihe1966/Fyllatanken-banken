@@ -50,8 +50,8 @@ describe("searchByIngred", () => {
 
   test("should return an empty array if no matches", () => {
     const allRecipes = [
-      new Recipe("Pasta", 2, ["pasta", "tomato", "cheese", "salt"], ["200g", "2", "50g"]),
-      new Recipe("Burger", 1, ["bun", "meat", "cheese", "salt"], ["1", "150g", "20g"])
+      new Recipe("Pasta", 2, ["pasta", "tomato", "cheese", "salt"], ["200g", "2", "50g", "10g"]),
+      new Recipe("Burger", 1, ["bun", "meat", "cheese", "salt"], ["1", "150g", "20g", "10g"])
     ];
 
     const result = searchByIngred(["banana"], allRecipes);
