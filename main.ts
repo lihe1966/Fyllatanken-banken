@@ -2,7 +2,7 @@ import * as readline from 'readline';
 import { Recipe } from './recipe';
 
 // Hämta alla recept från Recipe.ts
-const allRecipes = Recipe.getInstances();
+export const allRecipes = Recipe.getInstances();
 
 
 // Skapa en Readline interface
@@ -11,7 +11,7 @@ var rl = readline.createInterface({
     output: process.stdout
 });
 
-async function askQuestion(query: string): Promise<string> {
+export async function askQuestion(query: string): Promise<string> {
     return new Promise((resolve) => {
         rl.question(query, (answer) => {
             resolve(answer.trim()); // Trim spaces for cleaner input
@@ -35,7 +35,7 @@ async function askQuestion(query: string): Promise<string> {
  * @returns {Promise<void>} A promise that resolves when ingredient input
  * is completed and recipe search is triggered.
  */
-async function add_ingredient() {
+export async function add_ingredient() {
     let ingredients: string[] = [];
     let userInput;
     console.clear();
@@ -74,7 +74,7 @@ async function add_ingredient() {
  * @complexity O(n*m), where n is the number of recipes and m is the number of ingredients in a recipe.
  * @returns {Promise<void>} A promise that resolves after displaying matching recipes and handling user input.
  */
-async function searchByIngred(ings: Array<string>, allRecipes: Array<Recipe>) {
+export async function searchByIngred(ings: Array<string>, allRecipes: Array<Recipe>) {
     let result: [string, number, number][] = []; //titel, mängd korrekta ingredienser, totalt ingredienser i receptet
     for (let i = 1; i < allRecipes.length; i = i + 1) {
         const countSame = ings.filter(val => allRecipes[i].ingred.includes(val)).length;
@@ -111,7 +111,7 @@ async function searchByIngred(ings: Array<string>, allRecipes: Array<Recipe>) {
  * // If the recipe exists in allRecipes, it is printed.
  * // If the user types "klar", they return to the main menu.
 */
-async function searchByName() {
+export async function searchByName() {
     let found: boolean = false;
     let userInput = await askQuestion("Skriv in en rätt, om du vill gå ur skriv 'klar': ");
     if (userInput === "klar") {
@@ -153,7 +153,7 @@ async function searchByName() {
  * @complexity O(1), as it only processes and displays a single recipe.
  * @returns {Promise<void>} A promise that resolves when the user confirms continuation.
  */
-async function printRecipe(recipe: Recipe) {
+export async function printRecipe(recipe: Recipe) {
     console.clear();
     console.log("Namn: " + recipe.title);
     console.log("Antal portioner: " + recipe.port);
@@ -188,7 +188,7 @@ async function printRecipe(recipe: Recipe) {
  * @complexity O(1), since it only handles menu selection.
  * @returns {Promise<void>} A promise that resolves when the user selects an option.
  */
-async function main() {
+export async function main() {
     console.clear();
     console.log("Välkommen till fylla tanken-banken!");
     console.log("Alterantiv\n 1. Sök recept efter ingredienser.\n 2. Sök recept.\n");

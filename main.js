@@ -36,29 +36,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.allRecipes = void 0;
+exports.askQuestion = askQuestion;
+exports.add_ingredient = add_ingredient;
+exports.searchByIngred = searchByIngred;
+exports.searchByName = searchByName;
+exports.printRecipe = printRecipe;
+exports.main = main;
 var readline = require("readline");
 var recipe_1 = require("./recipe");
-// class Recipe {
-//     title: string;
-//     port: number; //antal portioner
-//     ingred: Array<string>
-//     amounts: Array<string>
-//     constructor(title: string, port: number, ingred: Array<string>, amounts: Array<string> = []) {
-//         this.title = title;
-//         this.port = port;
-//         this.ingred = ingred;
-//         this.amounts = amounts;
-//     }
-// }
-//VARIABLES
-var r1 = new recipe_1.Recipe("Köttbullar", 2, ["färs", "mjölk", "ströbröd", "gul lök", "ägg", "salt", "peppar"], ["500g", "1,5 dl", "5 msk", "1/2", "1", "1 tsk", "1 krm"]);
-var r2 = new recipe_1.Recipe("Havregrynsgröt", 3, ["havregryn", "vatten", "salt"], ["1 dl", "2,5 dl", "0,5 krm"]);
-var r3 = new recipe_1.Recipe("Pelmeni", 4, ["vetemjöl", "ägg", "salt", "färs", "gul lök", "salt", "peppar"], ["300g", "3", "1/2 tsk", "300g", "1", "1 krm", "1 krm"]);
-var r4 = new recipe_1.Recipe("Omelett", 4, ["ägg", "mjölk", "salt", "peppar", "smör eller margarin"], ["6", "1 dl", "1/2 tsk", "1 krm", "2 msk"]);
-var r5 = new recipe_1.Recipe("Lasagne", 4, ["gul lök", "vitlöksklyftor", "nötfärs", "olja", "tomatpuré", "torkad timjan", "torkad rosmarin", "krossade tomater", "köttbuljongtärning", "salt", "peppar", "torkade lasagneplattor", "smör", "vetemjöl", "mjölk"], ["2", "2", "500 g", "1 msk", "4 msk", "1 tsk", "1 tsk", "390 g", "1", "1 krm", "1 krm", "9", "6 msk", "6 msk", "10 dl"]);
-var r6 = new recipe_1.Recipe("Havresoppa", 2, ["havregryn", "vatten", "salt", "brosk"], ["1 dl", "2,5 dl", "0,5 krm", "3 kg"]);
-//const allRecipes = [r1, r2, r3, r4, r5, r6];
-var allRecipes = recipe_1.Recipe.getInstances();
+// Hämta alla recept från Recipe.ts
+exports.allRecipes = recipe_1.Recipe.getInstances();
+// Skapa en Readline interface
 var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -74,6 +63,22 @@ function askQuestion(query) {
         });
     });
 }
+/**
+ * Collects a list of ingredients from user input and searches for
+ * matching recipes.
+ * @example
+ * // User input sequence:
+ * // "tomato"
+ * // "cheese"
+ * // "klar"
+ * // Output:
+ * // "Your ingredients are: tomato, cheese"
+ * // Calls searchByIngred(["tomato", "cheese"], allRecipes)
+ * @precondition The function must be executed in an environment that
+ * supports async/await.
+ * @returns {Promise<void>} A promise that resolves when ingredient input
+ * is completed and recipe search is triggered.
+ */
 function add_ingredient() {
     return __awaiter(this, void 0, void 0, function () {
         var ingredients, userInput;
@@ -99,13 +104,28 @@ function add_ingredient() {
                 case 3:
                     console.log("Dina ingredienser är:", ingredients.join(", "));
                     if (userInput != null) {
-                        searchByIngred(ingredients, allRecipes);
+                        searchByIngred(ingredients, exports.allRecipes);
                     }
                     return [2 /*return*/];
             }
         });
     });
 }
+/**
+ * Searches for recipes that match the given ingredients and sorts them by relevance.
+ * @example
+ * // Given input:
+ * // ings = ["tomato", "cheese"]
+ * // allRecipes = [{ title: "Pizza", ingred: ["tomato", "cheese", "dough"] }, ...]
+ * // Output:
+ * // [["Pizza", " Du har 2/3 ingredienser"], ...]
+ * @async
+ * @param {Array<string>} ings - List of ingredients provided by the user.
+ * @param {Array<Recipe>} allRecipes - List of available recipes.
+ * @precondition The function must be run in an environment that supports async/await.
+ * @complexity O(n*m), where n is the number of recipes and m is the number of ingredients in a recipe.
+ * @returns {Promise<void>} A promise that resolves after displaying matching recipes and handling user input.
+ */
 function searchByIngred(ings, allRecipes) {
     return __awaiter(this, void 0, void 0, function () {
         var result, _loop_1, i, formattedResult, userInput;
@@ -153,6 +173,14 @@ function searchByIngred(ings, allRecipes) {
         });
     });
 }
+/**
+ * Searches for a recipe by name based on user input.
+ * @example
+ * // User input:
+ * // "Pasta Carbonara"
+ * // If the recipe exists in allRecipes, it is printed.
+ * // If the user types "klar", they return to the main menu.
+*/
 function searchByName() {
     return __awaiter(this, void 0, void 0, function () {
         var found, userInput, i;
@@ -167,9 +195,9 @@ function searchByName() {
                         found = true;
                         main();
                     }
-                    for (i = 1; i < allRecipes.length; i = i + 1) {
-                        if (userInput.toLowerCase() === allRecipes[i].title.toLowerCase()) {
-                            printRecipe(allRecipes[i]);
+                    for (i = 1; i < exports.allRecipes.length; i = i + 1) {
+                        if (userInput.toLowerCase() === exports.allRecipes[i].title.toLowerCase()) {
+                            printRecipe(exports.allRecipes[i]);
                             found = true;
                             break;
                         }
@@ -183,6 +211,26 @@ function searchByName() {
         });
     });
 }
+/**
+ * Displays the details of a given recipe and waits for user confirmation
+ * to return to the main menu.
+ * @example
+ * // Given a Recipe object:
+ * // { title: "Pasta Carbonara", port: 4, ingred: ["pasta", "bacon", "egg"],
+ *  amounts: ["200g", "150g", "2st"] }
+ * // Output:
+ * // Namn: Pasta Carbonara
+ * // Antal portioner: 4
+ * // Ingredienser: pasta, bacon, egg
+ * // Mängder per ingrediens: 200g, 150g, 2st
+ * // User must type 'klar' to continue.
+ * @async
+ * @function printRecipe
+ * @param {Recipe} recipe - The recipe object containing title, servings, ingredients, and amounts.
+ * @precondition The function must be run in an environment that supports async/await.
+ * @complexity O(1), as it only processes and displays a single recipe.
+ * @returns {Promise<void>} A promise that resolves when the user confirms continuation.
+ */
 function printRecipe(recipe) {
     return __awaiter(this, void 0, void 0, function () {
         var userInput;
@@ -213,6 +261,23 @@ function printRecipe(recipe) {
         });
     });
 }
+/**
+ * The main menu function that allows the user to search for recipes by ingredients or by name.
+ * @example
+ * // Output:
+ * // "Välkommen till fylla tanken-banken!"
+ * // "Alternativ"
+ * // "1. Sök recept efter ingredienser."
+ * // "2. Sök recept."
+ * // User selects an option:
+ * // - If "1", calls add_ingredient().
+ * // - If "2", calls searchByName().
+ * @async
+ * @function main
+ * @precondition The function must be run in an environment that supports async/await.
+ * @complexity O(1), since it only handles menu selection.
+ * @returns {Promise<void>} A promise that resolves when the user selects an option.
+ */
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         var userInput;
@@ -243,4 +308,5 @@ function main() {
         });
     });
 }
+// Start main menu
 main();

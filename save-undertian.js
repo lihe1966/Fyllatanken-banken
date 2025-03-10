@@ -23,9 +23,9 @@ export async function skapa_recept_url(url) {
         const h1 = document.querySelector('h1');
         return h1 ? h1.innerText.trim() : null;
     });
-    
+
     console.log('Titel:', title);
-    
+
 
     // Vänta på att ingredienslistan laddas in
     await page.waitForSelector('.ingredients .ingredients-group ul');
@@ -34,7 +34,7 @@ export async function skapa_recept_url(url) {
     const ingredients = await page.evaluate(() => {
         return Array.from(document.querySelectorAll('.ingredients .ingredients-group ul li span:nth-child(3)'))
             .map(li => li.innerText.trim())
-            
+
     });
 
     const amounts = await page.evaluate(() => {
@@ -48,30 +48,16 @@ export async function skapa_recept_url(url) {
             })
             .filter(text => text.length > 0); // Tar bort eventuella tomma strängar
     });
-    
 
-    
+
+
     await browser.close();
     const r = new Recipe(title, 2, ingredients, amounts );
 
-    return  r; 
+    return  r;
 }
 
 
-// Kör funktionen
-//skapa_recept_url('https://undertian.com/recept/kramig-belugapastasas-med-paprika/');
-
-
-
-//recept från url
-// const r3 = skapa_recept_url("https://undertian.com/recept/graartsbolognese/");
-// const r4 = skapa_recept_url("https://undertian.com/recept/pad-thai-cheap-style/");
-// const r5 = skapa_recept_url("https://undertian.com/recept/tomatsoppa-med-ort-tomat-och-fetabrod-2/");
-// const r6 = skapa_recept_url("https://undertian.com/recept/gazpacho-med-bonbrod/");
-// const r7 = skapa_recept_url("https://undertian.com/recept/snabb-pasta-med-soltorkade-tomater-tahini-och-vita-bonor/");
-// const r8 = skapa_recept_url("https://undertian.com/recept/kramig-kalsas/");
-
-//console.log(r7);
 
 
 import fs from 'fs';
@@ -90,9 +76,9 @@ async function save_recipe(url) {
     // Skapa en Recipe-instans i korrekt format
     const recipeContent = `
 
-const r${randomInt(1,1000)} = new Recipe(
+const r${Date.now()} = new Recipe(
     ${JSON.stringify(recipe.title)},
-    2, 
+    2,
     ${JSON.stringify(recipe.ingred)},
     ${JSON.stringify(recipe.amounts)}
 );
