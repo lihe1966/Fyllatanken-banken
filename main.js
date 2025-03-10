@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var readline = require("readline");
+var recept_1 = require("./recept");
 var Recipe = /** @class */ (function () {
     function Recipe(title, port, ingred, amounts) {
         if (amounts === void 0) { amounts = []; }
@@ -48,13 +49,6 @@ var Recipe = /** @class */ (function () {
     return Recipe;
 }());
 //VARIABLES
-var r1 = new Recipe("Köttbullar", 2, ["färs", "mjölk", "ströbröd", "gul lök", "ägg", "salt", "peppar"], ["500g", "1,5 dl", "5 msk", "1/2", "1", "1 tsk", "1 krm"]);
-var r2 = new Recipe("Havregrynsgröt", 3, ["havregryn", "vatten", "salt"], ["1 dl", "2,5 dl", "0,5 krm"]);
-var r3 = new Recipe("Pelmeni", 4, ["vetemjöl", "ägg", "salt", "färs", "gul lök", "salt", "peppar"], ["300g", "3", "1/2 tsk", "300g", "1", "1 krm", "1 krm"]);
-var r4 = new Recipe("Omelett", 4, ["ägg", "mjölk", "salt", "peppar", "smör eller margarin"], ["6", "1 dl", "1/2 tsk", "1 krm", "2 msk"]);
-var r5 = new Recipe("Lasagne", 4, ["gul lök", "vitlöksklyftor", "nötfärs", "olja", "tomatpuré", "torkad timjan", "torkad rosmarin", "krossade tomater", "köttbuljongtärning", "salt", "peppar", "torkade lasagneplattor", "smör", "vetemjöl", "mjölk"], ["2", "2", "500 g", "1 msk", "4 msk", "1 tsk", "1 tsk", "390 g", "1", "1 krm", "1 krm", "9", "6 msk", "6 msk", "10 dl"]);
-var r6 = new Recipe("Havresoppa", 2, ["havregryn", "vatten", "salt", "brosk"], ["1 dl", "2,5 dl", "0,5 krm", "3 kg"]);
-var allRecipes = [r1, r2, r3, r4, r5, r6];
 var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -95,7 +89,7 @@ function add_ingredient() {
                 case 3:
                     console.log("Dina ingredienser är:", ingredients.join(", "));
                     if (userInput != null) {
-                        searchByIngred(ingredients, allRecipes);
+                        searchByIngred(ingredients, recept_1.allRecipes);
                     }
                     return [2 /*return*/];
             }
@@ -116,7 +110,7 @@ function searchByIngred(ings, allRecipes) {
                             result.push(tempArray);
                         }
                     };
-                    for (i = 1; i < allRecipes.length; i = i + 1) {
+                    for (i = 0; i < allRecipes.length - 1; i = i + 1) {
                         _loop_1(i);
                     }
                     result = result.sort(function (a, b) { return b[1] - a[1]; }); //Sortera
@@ -163,9 +157,9 @@ function searchByName() {
                         found = true;
                         main();
                     }
-                    for (i = 1; i < allRecipes.length; i = i + 1) {
-                        if (userInput.toLowerCase() === allRecipes[i].title.toLowerCase()) {
-                            printRecipe(allRecipes[i]);
+                    for (i = 0; i < recept_1.allRecipes.length - 1; i = i + 1) {
+                        if (userInput.toLowerCase() === recept_1.allRecipes[i].title.toLowerCase()) {
+                            printRecipe(recept_1.allRecipes[i]);
                             found = true;
                             break;
                         }
@@ -229,7 +223,7 @@ function main() {
                         return [3 /*break*/, 3];
                     }
                     if (userInput === "2") {
-                        searchByName(); //Söker utan inmatade ingredienser.
+                        searchByName();
                         return [3 /*break*/, 3];
                     }
                     console.log("Felaktig input\n");
