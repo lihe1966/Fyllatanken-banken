@@ -175,10 +175,10 @@ function save_recipe(url) {
     });
 }
 // Exempelanrop
-var url = "https://www.ica.se/recept/havregrynsgrot-730321/";
-//create_recipe_url(url);
-save_recipe("https://www.ica.se/recept/kramig-carbonara-722780/");
-save_recipe("https://www.ica.se/recept/bagel-med-lax-pepparrotskram-och-gurka-730245/");
-save_recipe("https://www.ica.se/recept/halloumigryta-med-ris-725482/");
-save_recipe("https://www.ica.se/recept/fajitasplat-730298/");
-save_recipe("https://www.ica.se/recept/laxlasagne-med-fetaost-714147/");
+// var url = "https://www.ica.se/recept/havregrynsgrot-730321/";
+// //create_recipe_url(url);
+// save_recipe("https://www.ica.se/recept/kramig-carbonara-722780/");
+// save_recipe("https://www.ica.se/recept/bagel-med-lax-pepparrotskram-och-gurka-730245/");
+// save_recipe("https://www.ica.se/recept/halloumigryta-med-ris-725482/");
+// save_recipe("https://www.ica.se/recept/fajitasplat-730298/");
+// save_recipe("https://www.ica.se/recept/laxlasagne-med-fetaost-714147/");

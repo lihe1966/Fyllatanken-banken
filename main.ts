@@ -31,7 +31,7 @@ export async function askQuestion(query: string): Promise<string> {
  * // "Your ingredients are: tomato, cheese"
  * // Calls searchByIngred(["tomato", "cheese"], allRecipes)
  * @precondition The function must be executed in an environment that
- * supports async/await.
+ * @async
  * @returns {Promise<void>} A promise that resolves when ingredient input
  * is completed and recipe search is triggered.
  */
@@ -110,6 +110,7 @@ export async function searchByIngred(ings: Array<string>, allRecipes: Array<Reci
  * // "Pasta Carbonara"
  * // If the recipe exists in allRecipes, it is printed.
  * // If the user types "klar", they return to the main menu.
+ * @async
 */
 export async function searchByName() {
     let found: boolean = false;
@@ -147,7 +148,6 @@ export async function searchByName() {
  * // Mängder per ingrediens: 200g, 150g, 2st
  * // User must type 'klar' to continue.
  * @async
- * @function printRecipe
  * @param {Recipe} recipe - The recipe object containing title, servings, ingredients, and amounts.
  * @precondition The function must be run in an environment that supports async/await.
  * @complexity O(1), as it only processes and displays a single recipe.
@@ -183,9 +183,7 @@ export async function printRecipe(recipe: Recipe) {
  * // - If "1", calls add_ingredient().
  * // - If "2", calls searchByName().
  * @async
- * @function main
  * @precondition The function must be run in an environment that supports async/await.
- * @complexity O(1), since it only handles menu selection.
  * @returns {Promise<void>} A promise that resolves when the user selects an option.
  */
 export async function main() {
@@ -210,8 +208,8 @@ export async function main() {
 }
 
 
-// Start main menu
-main();
+
+main(); //Call main to start the program
 
 
 

@@ -1,5 +1,6 @@
-//const puppeteer = require('puppeteer');
 import puppeteer from 'puppeteer';
+import fs from 'fs';
+
 
 class Recipe {
     constructor(title, port = null, ingred, amounts = []) {
@@ -9,9 +10,6 @@ class Recipe {
         this.amounts = amounts;
     }
 }
-
-
-
 
 export async function skapa_recept_url(url) {
     const browser = await puppeteer.launch({ headless: true });
@@ -32,7 +30,8 @@ export async function skapa_recept_url(url) {
 
     // Extrahera ingredienserna
     const ingredients = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll('.ingredients .ingredients-group ul li span:nth-child(3)'))
+        return Array.from(document.querySelectorAll(
+            '.ingredients .ingredients-group ul li span:nth-child(3)'))
             .map(li => li.innerText.trim())
 
     });
@@ -56,14 +55,6 @@ export async function skapa_recept_url(url) {
 
     return  r;
 }
-
-
-
-
-import fs from 'fs';
-import { randomInt } from 'crypto';
-
-
 
 async function save_recipe(url) {
     const recipe = await skapa_recept_url(url);
@@ -90,15 +81,13 @@ const r${Date.now()} = new Recipe(
     console.log('Receptet har lagts till i recipe.ts!');
 }
 
-
-
 // Exempel på anrop
 //const url = 'https://undertian.com/recept/graartsbolognese/';
-const url = 'https://undertian.com/recept/graartsbolognese/';
+//const url = 'https://undertian.com/recept/graartsbolognese/';
 //save_recipe("https://undertian.com/recept/tomatsoppa-med-ort-tomat-och-fetabrod-2/");
-save_recipe("https://undertian.com/recept/vegansk-bolognese-pa-sojafars/");
-save_recipe("https://undertian.com/recept/gronkalssallad-med-belugalinser-och-kardemummadressing/");
-save_recipe("https://undertian.com/recept/veganska-kottbullar-med-pasta-och-tomatsas/");
-save_recipe("https://undertian.com/recept/billig-rotfruktssoppa/");
-save_recipe("https://undertian.com/recept/tomatsoppa-med-ugnsrostade-blomkal/");
-save_recipe("https://undertian.com/recept/lins-och-pumpabollar-med-ajvar-relish/");
+// save_recipe("https://undertian.com/recept/vegansk-bolognese-pa-sojafars/");
+// save_recipe("https://undertian.com/recept/gronkalssallad-med-belugalinser-och-kardemummadressing/");
+// save_recipe("https://undertian.com/recept/veganska-kottbullar-med-pasta-och-tomatsas/");
+// save_recipe("https://undertian.com/recept/billig-rotfruktssoppa/");
+// save_recipe("https://undertian.com/recept/tomatsoppa-med-ugnsrostade-blomkal/");
+// save_recipe("https://undertian.com/recept/lins-och-pumpabollar-med-ajvar-relish/");

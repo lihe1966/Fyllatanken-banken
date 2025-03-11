@@ -5,31 +5,32 @@
  * @class Recipe
  * @property {string} title - The title of the recipe.
  * @property {number | null} port - The number of portions the recipe is for.
- * @property {string[]} ingred - The ingredients of the recipe.
- * @property {string[]} amounts - The amounts of the ingredients in the recipe.
- * @property {Recipe[]} instances - An array of all instances of the class.
+ * @property {Array<string>} ingred - The ingredients of the recipe.
+ * @property {Array<string>} amounts - The amounts of the ingredients in the recipe.
+ * @property {Array<Recipe>} instances - An array of all instances of the class.
  * @method getInstances - Static method that returns all instances of the class.
  *
  *  @example
  * // Create a new recipe
- * const recipe = new Recipe("Pancakes", 4, ["Flour", "Milk", "Eggs"], ["2 cups", "1 cup", "2"]);
+ * const recipe = new Recipe(
+ *      "Pancakes", 4, ["Flour", "Milk", "Eggs"], ["2 cups", "1 cup", "2"]);
  * console.log(Recipe.getInstances()); // Returns an array of all recipes
- *
  */
 export class Recipe {
     title: string;
     port: number | null;
     ingred: Array<string>;
     amounts:Array<string>;
-    private static instances: Recipe[] = [];
-    constructor(title: string, port: number | null, ingred: Array<string>, amounts: Array<string>) {
+    private static instances: Array<Recipe> = [];
+    constructor(title: string, port: number | null,
+                ingred: Array<string>, amounts: Array<string>) {
         this.title = title;
         this.port = port;
         this.ingred = ingred;
         this.amounts = amounts;
         Recipe.instances.push(this);
     }
-    static getInstances(): Recipe[] {
+    static getInstances(): Array<Recipe> {
         return Recipe.instances;
     }
 }
@@ -300,4 +301,180 @@ const r1741613944182 = new Recipe(
     4,
     ["port ris eller annat gryn","blomkålshuvud (à ca 300 g)","halloumi eller grillost","olja","curry","kokosmjölk","förp krossade tomater (à 390 g)","peppar","rostad lök"],
     ["4","1/2","400 g","1 msk","2 tsk","200 ml","1","","1/2 dl"]
+);
+
+
+const r1741688538031 = new Recipe(
+    "Fajitasplåt",
+    4,
+    ["fläskkarré","vitlöksklyftor","chipotlepaste","kyckling- eller kalvfond","malen spiskummin","paprikapulver","rödvinsvinäger","förp skivad ananas (à ca 200 g)","stor  rödlök (à ca 140 g)","paprikor (gärna röd och grön)","förp kokta svarta bönor (à ca 380 g)","olivolja","salt","tortillabröd","färsk koriander","riven ost","crème fraiche"],
+    ["300 g","2","2 msk","1 msk","2 tsk","1 tsk","2 tsk","1","1","2","1","2 msk","1 tsk","","","",""]
+);
+
+const r1741688538101 = new Recipe(
+    "Halloumigryta med ris",
+    4,
+    ["port ris eller annat gryn","blomkålshuvud (à ca 300 g)","halloumi eller grillost","olja","curry","kokosmjölk","förp krossade tomater (à 390 g)","peppar","rostad lök"],
+    ["4","1/2","400 g","1 msk","2 tsk","200 ml","1","","1/2 dl"]
+);
+
+const r1741688538362 = new Recipe(
+    "Bagel med lax, pepparrotskräm och gurka",
+    4,
+    ["cream cheese","finriven pepparrot","svartpeppar","gurka","färskpressad citronjuice","hackad färsk eller fryst  dill","bagels","kallrökt lax","ev färsk dill (till dekoration)"],
+    ["150 g","3 msk","1 krm","1/2","1 msk","2 msk","4","150 g",""]
+);
+
+const r1741688538398 = new Recipe(
+    "Laxlasagne med fetaost",
+    4,
+    ["fryst bladspenat","fetaost","cottage cheese","vitlöksklyftor","salt","vitpeppar","skinn- och benfri laxfilé","förp krossade tomater med örter t ex basilika (à 400 g)","vitt vin eller matlagningsvin","olja (till formen)","torkade lasagneplattor"],
+    ["400 g","150 g","500 g","2","","","400 g","1","1/2 dl","","ca 9"]
+);
+
+const r1741688538466 = new Recipe(
+    "Krämig carbonara",
+    4,
+    ["port spaghetti","förp bacon (à 140 g)","ägg","vispgrädde","riven parmesan","salt","nymalen  svartpeppar","rucola"],
+    ["4","2","4","1 dl","2 dl","1/2 tsk","2 krm","65 g"]
+);
+
+const r1741688937371 = new Recipe(
+    "Halloumigryta med ris",
+    4,
+    ["port ris eller annat gryn","blomkålshuvud (à ca 300 g)","halloumi eller grillost","olja","curry","kokosmjölk","förp krossade tomater (à 390 g)","peppar","rostad lök"],
+    ["4","1/2","400 g","1 msk","2 tsk","200 ml","1","","1/2 dl"]
+);
+
+const r1741688937889 = new Recipe(
+    "Krämig carbonara",
+    4,
+    ["port spaghetti","förp bacon (à 140 g)","ägg","vispgrädde","riven parmesan","salt","nymalen  svartpeppar","rucola"],
+    ["4","2","4","1 dl","2 dl","1/2 tsk","2 krm","65 g"]
+);
+
+const r1741688938785 = new Recipe(
+    "Bagel med lax, pepparrotskräm och gurka",
+    4,
+    ["cream cheese","finriven pepparrot","svartpeppar","gurka","färskpressad citronjuice","hackad färsk eller fryst  dill","bagels","kallrökt lax","ev färsk dill (till dekoration)"],
+    ["150 g","3 msk","1 krm","1/2","1 msk","2 msk","4","150 g",""]
+);
+
+const r1741688939032 = new Recipe(
+    "Laxlasagne med fetaost",
+    4,
+    ["fryst bladspenat","fetaost","cottage cheese","vitlöksklyftor","salt","vitpeppar","skinn- och benfri laxfilé","förp krossade tomater med örter t ex basilika (à 400 g)","vitt vin eller matlagningsvin","olja (till formen)","torkade lasagneplattor"],
+    ["400 g","150 g","500 g","2","","","400 g","1","1/2 dl","","ca 9"]
+);
+
+const r1741688939065 = new Recipe(
+    "Fajitasplåt",
+    4,
+    ["fläskkarré","vitlöksklyftor","chipotlepaste","kyckling- eller kalvfond","malen spiskummin","paprikapulver","rödvinsvinäger","förp skivad ananas (à ca 200 g)","stor  rödlök (à ca 140 g)","paprikor (gärna röd och grön)","förp kokta svarta bönor (à ca 380 g)","olivolja","salt","tortillabröd","färsk koriander","riven ost","crème fraiche"],
+    ["300 g","2","2 msk","1 msk","2 tsk","1 tsk","2 tsk","1","1","2","1","2 msk","1 tsk","","","",""]
+);
+
+const r1741689090275 = new Recipe(
+    "Krämig carbonara",
+    4,
+    ["port spaghetti","förp bacon (à 140 g)","ägg","vispgrädde","riven parmesan","salt","nymalen  svartpeppar","rucola"],
+    ["4","2","4","1 dl","2 dl","1/2 tsk","2 krm","65 g"]
+);
+
+const r1741689090426 = new Recipe(
+    "Bagel med lax, pepparrotskräm och gurka",
+    4,
+    ["cream cheese","finriven pepparrot","svartpeppar","gurka","färskpressad citronjuice","hackad färsk eller fryst  dill","bagels","kallrökt lax","ev färsk dill (till dekoration)"],
+    ["150 g","3 msk","1 krm","1/2","1 msk","2 msk","4","150 g",""]
+);
+
+const r1741689090592 = new Recipe(
+    "Laxlasagne med fetaost",
+    4,
+    ["fryst bladspenat","fetaost","cottage cheese","vitlöksklyftor","salt","vitpeppar","skinn- och benfri laxfilé","förp krossade tomater med örter t ex basilika (à 400 g)","vitt vin eller matlagningsvin","olja (till formen)","torkade lasagneplattor"],
+    ["400 g","150 g","500 g","2","","","400 g","1","1/2 dl","","ca 9"]
+);
+
+const r1741689090609 = new Recipe(
+    "Fajitasplåt",
+    4,
+    ["fläskkarré","vitlöksklyftor","chipotlepaste","kyckling- eller kalvfond","malen spiskummin","paprikapulver","rödvinsvinäger","förp skivad ananas (à ca 200 g)","stor  rödlök (à ca 140 g)","paprikor (gärna röd och grön)","förp kokta svarta bönor (à ca 380 g)","olivolja","salt","tortillabröd","färsk koriander","riven ost","crème fraiche"],
+    ["300 g","2","2 msk","1 msk","2 tsk","1 tsk","2 tsk","1","1","2","1","2 msk","1 tsk","","","",""]
+);
+
+const r1741689090639 = new Recipe(
+    "Halloumigryta med ris",
+    4,
+    ["port ris eller annat gryn","blomkålshuvud (à ca 300 g)","halloumi eller grillost","olja","curry","kokosmjölk","förp krossade tomater (à 390 g)","peppar","rostad lök"],
+    ["4","1/2","400 g","1 msk","2 tsk","200 ml","1","","1/2 dl"]
+);
+
+const r1741689144498 = new Recipe(
+    "Krämig carbonara",
+    4,
+    ["port spaghetti","förp bacon (à 140 g)","ägg","vispgrädde","riven parmesan","salt","nymalen  svartpeppar","rucola"],
+    ["4","2","4","1 dl","2 dl","1/2 tsk","2 krm","65 g"]
+);
+
+const r1741689144640 = new Recipe(
+    "Fajitasplåt",
+    4,
+    ["fläskkarré","vitlöksklyftor","chipotlepaste","kyckling- eller kalvfond","malen spiskummin","paprikapulver","rödvinsvinäger","förp skivad ananas (à ca 200 g)","stor  rödlök (à ca 140 g)","paprikor (gärna röd och grön)","förp kokta svarta bönor (à ca 380 g)","olivolja","salt","tortillabröd","färsk koriander","riven ost","crème fraiche"],
+    ["300 g","2","2 msk","1 msk","2 tsk","1 tsk","2 tsk","1","1","2","1","2 msk","1 tsk","","","",""]
+);
+
+const r1741689144770 = new Recipe(
+    "Bagel med lax, pepparrotskräm och gurka",
+    4,
+    ["cream cheese","finriven pepparrot","svartpeppar","gurka","färskpressad citronjuice","hackad färsk eller fryst  dill","bagels","kallrökt lax","ev färsk dill (till dekoration)"],
+    ["150 g","3 msk","1 krm","1/2","1 msk","2 msk","4","150 g",""]
+);
+
+const r1741689145037 = new Recipe(
+    "Halloumigryta med ris",
+    4,
+    ["port ris eller annat gryn","blomkålshuvud (à ca 300 g)","halloumi eller grillost","olja","curry","kokosmjölk","förp krossade tomater (à 390 g)","peppar","rostad lök"],
+    ["4","1/2","400 g","1 msk","2 tsk","200 ml","1","","1/2 dl"]
+);
+
+const r1741689145039 = new Recipe(
+    "Laxlasagne med fetaost",
+    4,
+    ["fryst bladspenat","fetaost","cottage cheese","vitlöksklyftor","salt","vitpeppar","skinn- och benfri laxfilé","förp krossade tomater med örter t ex basilika (à 400 g)","vitt vin eller matlagningsvin","olja (till formen)","torkade lasagneplattor"],
+    ["400 g","150 g","500 g","2","","","400 g","1","1/2 dl","","ca 9"]
+);
+
+const r1741689210014 = new Recipe(
+    "Krämig carbonara",
+    4,
+    ["port spaghetti","förp bacon (à 140 g)","ägg","vispgrädde","riven parmesan","salt","nymalen  svartpeppar","rucola"],
+    ["4","2","4","1 dl","2 dl","1/2 tsk","2 krm","65 g"]
+);
+
+const r1741689210594 = new Recipe(
+    "Halloumigryta med ris",
+    4,
+    ["port ris eller annat gryn","blomkålshuvud (à ca 300 g)","halloumi eller grillost","olja","curry","kokosmjölk","förp krossade tomater (à 390 g)","peppar","rostad lök"],
+    ["4","1/2","400 g","1 msk","2 tsk","200 ml","1","","1/2 dl"]
+);
+
+const r1741689210608 = new Recipe(
+    "Bagel med lax, pepparrotskräm och gurka",
+    4,
+    ["cream cheese","finriven pepparrot","svartpeppar","gurka","färskpressad citronjuice","hackad färsk eller fryst  dill","bagels","kallrökt lax","ev färsk dill (till dekoration)"],
+    ["150 g","3 msk","1 krm","1/2","1 msk","2 msk","4","150 g",""]
+);
+
+const r1741689211148 = new Recipe(
+    "Fajitasplåt",
+    4,
+    ["fläskkarré","vitlöksklyftor","chipotlepaste","kyckling- eller kalvfond","malen spiskummin","paprikapulver","rödvinsvinäger","förp skivad ananas (à ca 200 g)","stor  rödlök (à ca 140 g)","paprikor (gärna röd och grön)","förp kokta svarta bönor (à ca 380 g)","olivolja","salt","tortillabröd","färsk koriander","riven ost","crème fraiche"],
+    ["300 g","2","2 msk","1 msk","2 tsk","1 tsk","2 tsk","1","1","2","1","2 msk","1 tsk","","","",""]
+);
+
+const r1741689211175 = new Recipe(
+    "Laxlasagne med fetaost",
+    4,
+    ["fryst bladspenat","fetaost","cottage cheese","vitlöksklyftor","salt","vitpeppar","skinn- och benfri laxfilé","förp krossade tomater med örter t ex basilika (à 400 g)","vitt vin eller matlagningsvin","olja (till formen)","torkade lasagneplattor"],
+    ["400 g","150 g","500 g","2","","","400 g","1","1/2 dl","","ca 9"]
 );
