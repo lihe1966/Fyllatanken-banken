@@ -7,7 +7,12 @@ var Recipe = /** @class */ (function () {
         this.port = port;
         this.ingred = ingred;
         this.amounts = amounts;
+        Recipe.instances.push(this);
     }
+    Recipe.getInstances = function () {
+        return Recipe.instances;
+    };
+    Recipe.instances = [];
     return Recipe;
 }());
 exports.Recipe = Recipe;

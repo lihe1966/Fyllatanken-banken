@@ -2,16 +2,19 @@ export class Recipe {
     title: string;
     port: number;
     ingred: Array<string>;
-    amounts: Array<string>;
-  
-    constructor(title: string, port: number, ingred: Array<string>, amounts: Array<string>
-    ) {
+    amounts:Array<string>;
+    private static instances: Recipe[] = [];
+    constructor(title: string, port: number, ingred: Array<string>, amounts: Array<string>) {
         this.title = title;
         this.port = port;
         this.ingred = ingred;
         this.amounts = amounts;
+        Recipe.instances.push(this);
     }
-  }
+    static getInstances(): Recipe[] {
+        return Recipe.instances;
+    }
+}
   
   
   

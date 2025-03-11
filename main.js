@@ -36,23 +36,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.allRecipes = void 0;
 var readline = require("readline");
 var recept_1 = require("./recept");
-var Recipe = /** @class */ (function () {
-    function Recipe(title, port, ingred, amounts) {
-        if (amounts === void 0) { amounts = []; }
-        this.title = title;
-        this.port = port;
-        this.ingred = ingred;
-        this.amounts = amounts;
-    }
-    return Recipe;
-}());
-//VARIABLES
+exports.allRecipes = recept_1.Recipe.getInstances();
+//Create a readline interface
 var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
+//
 function askQuestion(query) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -64,6 +57,22 @@ function askQuestion(query) {
         });
     });
 }
+/**
+ * Collects a list of ingredients from user input and searches for
+ * matching recipes.
+ * @example
+ * // User input sequence:
+ * // "tomato"
+ * // "cheese"
+ * // "klar"
+ * // Output:
+ * // "Your ingredients are: tomato, cheese"
+ * // Calls searchByIngred(["tomato", "cheese"], allRecipes)
+ * @precondition The function must be executed in an environment that
+ * @async
+ * @returns {Promise<void>} A promise that resolves when ingredient input
+ * is completed and recipe search is triggered.
+ */
 function add_ingredient() {
     return __awaiter(this, void 0, void 0, function () {
         var ingredients, userInput;
@@ -89,13 +98,27 @@ function add_ingredient() {
                 case 3:
                     console.log("Dina ingredienser är:", ingredients.join(", "));
                     if (userInput != null) {
-                        searchByIngred(ingredients, recept_1.allRecipes);
+                        searchByIngred(ingredients, exports.allRecipes);
                     }
                     return [2 /*return*/];
             }
         });
     });
 }
+/**
+ * Searches for recipes that match the given ingredients and sorts them by relevance.
+ * @example
+ * // Given input:
+ * // ings = ["tomato", "cheese"]
+ * // allRecipes = [{ title: "Pizza", ingred: ["tomato", "cheese", "dough"] }, ...]
+ * // Output:
+ * // [["Pizza", " Du har 2/3 ingredienser"], ...]
+ * @async
+ * @param {Array<string>} ings - List of ingredients provided by the user.
+ * @param {Array<Recipe>} allRecipes - List of available recipes.
+ * @precondition The function must be run in an environment that supports async/await.
+ * @returns {Promise<void>} A promise that resolves after displaying matching recipes and handling user input.
+ */
 function searchByIngred(ings, allRecipes) {
     return __awaiter(this, void 0, void 0, function () {
         var result, _loop_1, i, formattedResult, userInput;
@@ -105,7 +128,7 @@ function searchByIngred(ings, allRecipes) {
                     result = [];
                     _loop_1 = function (i) {
                         var countSame = ings.filter(function (val) { return allRecipes[i].ingred.includes(val); }).length;
-                        if (countSame >= allRecipes[i].ingred.length - 3) { //Saknas fler än 3 ingredienser behöver receptet inte vara med
+                        if (countSame > 0) {
                             var tempArray = [allRecipes[i].title, countSame, allRecipes[i].ingred.length];
                             result.push(tempArray);
                         }
@@ -116,7 +139,7 @@ function searchByIngred(ings, allRecipes) {
                     result = result.sort(function (a, b) { return b[1] - a[1]; }); //Sortera
                     formattedResult = result.map(function (_a) {
                         var title = _a[0], count = _a[1], deniminator = _a[2];
-                        return [title, "".concat(count, "/").concat(deniminator)];
+                        return [title, "Du har ".concat(count, "/").concat(deniminator, " ingredienser")];
                     });
                     console.log(formattedResult);
                     console.log("\n\n");
@@ -143,6 +166,16 @@ function searchByIngred(ings, allRecipes) {
         });
     });
 }
+/**
+ * Searches for a recipe by name based on user input.
+ * @example
+ * // User input:
+ * // "Pasta Carbonara"
+ * // If the recipe exists in allRecipes, it calls through printRecipe(recipe).
+ * // If the recipe does not exist in allRecipes, you are prompted to type again.
+ * // If the user types "klar", they return to the main menu.
+ * @async
+*/
 function searchByName() {
     return __awaiter(this, void 0, void 0, function () {
         var found, userInput, i;
@@ -157,9 +190,9 @@ function searchByName() {
                         found = true;
                         main();
                     }
-                    for (i = 0; i < recept_1.allRecipes.length - 1; i = i + 1) {
-                        if (userInput.toLowerCase() === recept_1.allRecipes[i].title.toLowerCase()) {
-                            printRecipe(recept_1.allRecipes[i]);
+                    for (i = 0; i < exports.allRecipes.length - 1; i = i + 1) {
+                        if (userInput.toLowerCase() === exports.allRecipes[i].title.toLowerCase()) {
+                            printRecipe(exports.allRecipes[i]);
                             found = true;
                             break;
                         }
@@ -173,6 +206,24 @@ function searchByName() {
         });
     });
 }
+/**
+ * Displays the details of a given recipe and waits for user confirmation
+ * to return to the main menu.
+ * @example
+ * // Given a Recipe object:
+ * // { title: "Pasta Carbonara", port: 4, ingred: ["pasta", "bacon", "egg"],
+ *  amounts: ["200g", "150g", "2st"] }
+ * // Output:
+ * // Namn: Pasta Carbonara
+ * // Antal portioner: 4
+ * // Ingredienser: pasta, bacon, egg
+ * // Mängder per ingrediens: 200g, 150g, 2st
+ * // User must type 'klar' to continue.
+ * @async
+ * @param {Recipe} recipe - The recipe object containing title, servings, ingredients, and amounts.
+ * @precondition The function must be run in an environment that supports async/await.
+ * @returns {Promise<void>} A promise that resolves when the user confirms continuation.
+ */
 function printRecipe(recipe) {
     return __awaiter(this, void 0, void 0, function () {
         var userInput;
@@ -203,6 +254,21 @@ function printRecipe(recipe) {
         });
     });
 }
+/**
+ * The main menu function that allows the user to search for recipes by ingredients or by name.
+ * @example
+ * // Output:
+ * // "Välkommen till fylla tanken-banken!"
+ * // "Alternativ"
+ * // "1. Sök recept efter ingredienser."
+ * // "2. Sök recept."
+ * // User selects an option:
+ * // - If "1", calls add_ingredient().
+ * // - If "2", calls searchByName().
+ * @async
+ * @precondition The function must be run in an environment that supports async/await.
+ * @returns {Promise<void>} A promise that resolves when the user selects an option.
+ */
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         var userInput;
@@ -233,4 +299,4 @@ function main() {
         });
     });
 }
-main();
+main(); //Call main to start the program
